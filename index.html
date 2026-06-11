@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SQLSENSEI — Master SQL from zero to senior</title>
+  <meta name="description" content="Learn SQL the Socratic way. Five levels, 30+ modules, real datasets, in-browser playground. Built by SQLSENSEI." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2306b6d4'/%3E%3Ctext x='50' y='66' text-anchor='middle' font-family='monospace' font-size='52' font-weight='700' fill='%23000'%3ES%3C/text%3E%3C/svg%3E" />
+</head>
+<body>
+
+  <!-- ============================================ NAV ============================================ -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-mark">SQ</span>
+        <span>SQL<span class="brand-suffix">SENSEI</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="mindmap.html">Mind Map</a></li>
+        <li><a href="curriculum.html">Curriculum</a></li>
+        <li><a href="playground.html">Playground</a></li>
+        <li><a href="interview.html">Interview</a></li>
+        <li><a href="patterns.html">Patterns</a></li>
+        <li><a href="cheatsheet.html">Cheatsheet</a></li>
+        <li><a href="chat.html" class="btn btn-primary btn-sm" style="margin-left: 8px;">Start Learning →</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- ============================================ HERO ============================================ -->
+    <section class="hero container">
+      <div class="hero-eyebrow fade-in">
+        <span class="badge-dot" style="color: var(--cyan-400);"></span>
+        Socratic SQL tutor · 5 levels · 30+ modules
+      </div>
+
+      <h1 class="hero-title fade-in-delay-1">
+        Master SQL the way<br/>
+        <span class="gradient-text">senior engineers</span> learned it.
+      </h1>
+
+      <p class="hero-subtitle fade-in-delay-2">
+        SQLSENSEI is your patient, precise tutor with 15+ years of database engineering experience.
+        Learn through real datasets, real queries, and real practice — never abstract theory.
+        No skipping. Every concept earned.
+      </p>
+
+      <div class="hero-actions fade-in-delay-3">
+        <a href="chat.html" class="btn btn-primary btn-lg">
+          Start with Module 1.1
+          <span>→</span>
+        </a>
+        <a href="mindmap.html" class="btn btn-secondary btn-lg">
+          View the Mind Map
+        </a>
+        <a href="interview.html" class="btn btn-ghost btn-lg">
+          🎤 Interview Prep
+        </a>
+      </div>
+
+      <div class="hero-stats fade-in-delay-3">
+        <div class="hero-stat">
+          <div class="hero-stat-value">5</div>
+          <div class="hero-stat-label">Levels, zero to senior</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value">31</div>
+          <div class="hero-stat-label">Focused modules</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value">100+</div>
+          <div class="hero-stat-label">Practice exercises</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value">0</div>
+          <div class="hero-stat-label">Setup required</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ MIND MAP PREVIEW ============================================ -->
+    <section class="container section">
+      <div class="flex items-center justify-between mb-8" style="flex-wrap: wrap; gap: 16px;">
+        <div>
+          <div class="badge badge-cyan mb-4">
+            <span class="badge-dot"></span>
+            Visual learning path
+          </div>
+          <h2>One mind map. The entire SQL universe.</h2>
+          <p class="text-ink-300 mt-4" style="max-width: 600px;">
+            See how every concept connects before you write a single query. Click any node to jump straight to its lesson.
+          </p>
+        </div>
+        <a href="mindmap.html" class="btn btn-ghost">
+          Open full mind map →
+        </a>
+      </div>
+
+      <div class="mindmap-wrap" id="mindmap-preview">
+        <!-- Filled by mindmap.js -->
+      </div>
+    </section>
+
+    <!-- ============================================ CURRICULUM ============================================ -->
+    <section class="container section">
+      <div class="text-center mb-12">
+        <div class="badge badge-amber mb-4" style="margin: 0 auto;">
+          <span class="badge-dot"></span>
+          The curriculum
+        </div>
+        <h2>Five levels. Strict progression. Real mastery.</h2>
+        <p class="text-ink-300 mt-4" style="max-width: 600px; margin: 16px auto 0;">
+          Each level ends in a 3-question checkpoint quiz. Score 3/3 or you don't unlock the next one.
+          The way actual learning works.
+        </p>
+      </div>
+
+      <div class="levels-grid" id="levelsGrid">
+        <!-- Filled by app.js -->
+      </div>
+    </section>
+
+    <!-- ============================================ HOW IT WORKS ============================================ -->
+    <section class="container section">
+      <div class="text-center mb-12">
+        <div class="badge badge-violet mb-4" style="margin: 0 auto;">
+          <span class="badge-dot"></span>
+          The method
+        </div>
+        <h2>EXPLAIN → DEMONSTRATE → PRACTICE → REVIEW</h2>
+        <p class="text-ink-300 mt-4" style="max-width: 600px; margin: 16px auto 0;">
+          Every module runs this exact loop. No shortcuts. Each concept is grounded in a real dataset you'll grow familiar with.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-4 gap-4">
+        <div class="card card-accent">
+          <div class="badge badge-cyan mb-4" style="font-size: 0.65rem;">STEP 01</div>
+          <h3>Explain</h3>
+          <p class="text-ink-300 text-sm mt-2">Plain English first. The idea behind the syntax. Two or three sentences max.</p>
+        </div>
+        <div class="card card-accent">
+          <div class="badge badge-cyan mb-4" style="font-size: 0.65rem;">STEP 02</div>
+          <h3>Demonstrate</h3>
+          <p class="text-ink-300 text-sm mt-2">A working query on a real table. See the input, see the output. No abstractions.</p>
+        </div>
+        <div class="card card-accent">
+          <div class="badge badge-cyan mb-4" style="font-size: 0.65rem;">STEP 03</div>
+          <h3>Practice</h3>
+          <p class="text-ink-300 text-sm mt-2">One focused exercise. You write the query. SQLSENSEI checks it against the expected result.</p>
+        </div>
+        <div class="card card-accent">
+          <div class="badge badge-cyan mb-4" style="font-size: 0.65rem;">STEP 04</div>
+          <h3>Review</h3>
+          <p class="text-ink-300 text-sm mt-2">Three key takeaways. Then a checkpoint quiz at the end of every level.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ DATASET ============================================ -->
+    <section class="container section">
+      <div class="grid" style="grid-template-columns: 1fr 1.4fr; gap: 48px; align-items: center;">
+        <div>
+          <div class="badge badge-emerald mb-4">
+            <span class="badge-dot"></span>
+            Real data, all the way
+          </div>
+          <h2>Learn on one e-commerce dataset. Forever.</h2>
+          <p class="text-ink-300 mt-4 mb-6">
+            Five tables. Realistic sample rows. You'll know them by heart by Level 3, and that familiarity is what unlocks fast SQL intuition.
+          </p>
+          <div class="flex flex-col gap-3">
+            <div class="flex items-center gap-3">
+              <span class="badge badge-cyan">customers</span>
+              <span class="text-ink-300 text-sm">Who buys things — name, city, age, signup date</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="badge badge-cyan">products</span>
+              <span class="text-ink-300 text-sm">What's for sale — category, price, stock</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="badge badge-cyan">orders</span>
+              <span class="text-ink-300 text-sm">What was ordered — when, by whom, total</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="badge badge-cyan">order_items</span>
+              <span class="text-ink-300 text-sm">Line items inside each order</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="badge badge-cyan">employees</span>
+              <span class="text-ink-300 text-sm">Staff, departments, managers (self-joins!)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>customer_id</th>
+                <th>name</th>
+                <th>email</th>
+                <th>city</th>
+                <th>signup_date</th>
+                <th>age</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>Aarav Mehta</td><td>aarav@mail.com</td><td>Mumbai</td><td>2024-01-12</td><td>28</td></tr>
+              <tr><td>2</td><td>Sofia Reyes</td><td>sofia@mail.com</td><td>Madrid</td><td>2024-02-04</td><td>34</td></tr>
+              <tr><td>3</td><td>Kenji Tanaka</td><td>kenji@mail.com</td><td>Tokyo</td><td>2024-02-19</td><td>41</td></tr>
+              <tr><td>4</td><td>Priya Singh</td><td>priya@mail.com</td><td>Delhi</td><td>2024-03-08</td><td>26</td></tr>
+              <tr><td>5</td><td>Liam Doyle</td><td>liam@mail.com</td><td>Dublin</td><td>2024-04-22</td><td>52</td></tr>
+              <tr><td>6</td><td>Chen Wei</td><td>chen@mail.com</td><td>Shanghai</td><td>2024-05-15</td><td>31</td></tr>
+              <tr><td>7</td><td>Amara Okafor</td><td>amara@mail.com</td><td>Lagos</td><td>2024-06-30</td><td>29</td></tr>
+              <tr><td>8</td><td>Noa Cohen</td><td>noa@mail.com</td><td>Tel Aviv</td><td>2024-08-11</td><td>45</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ INTERVIEW PREP ============================================ -->
+    <section class="container section">
+      <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 32px; align-items: center;">
+        <div>
+          <div class="badge badge-rose mb-4">
+            <span class="badge-dot"></span>
+            Job hunting? Start here
+          </div>
+          <h2>40+ real SQL interview questions from Google, Amazon, Meta &amp; more.</h2>
+          <p class="text-ink-300 mt-4 mb-6">
+            Tagged by company, difficulty, topic, and frequency. Includes the famous
+            <strong style="color: var(--violet-400);">"tricky-but-easy"</strong> set — gotchas where 70% of candidates get it wrong even though the question looks trivial.
+          </p>
+          <div class="flex gap-3" style="flex-wrap: wrap;">
+            <a href="interview.html" class="btn btn-primary">Open Interview Prep →</a>
+            <a href="interview.html?tricky=1" class="btn btn-secondary">💀 Tricky questions only</a>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <a href="interview.html?company=google" class="card" style="text-decoration: none; padding: 16px; text-align: center;">
+            <div style="font-size: 1.8rem;">🔵</div>
+            <div style="font-weight: 600; margin-top: 4px;">Google</div>
+            <div class="text-ink-400 text-xs">Window functions, optimization</div>
+          </a>
+          <a href="interview.html?company=amazon" class="card" style="text-decoration: none; padding: 16px; text-align: center;">
+            <div style="font-size: 1.8rem;">📦</div>
+            <div style="font-weight: 600; margin-top: 4px;">Amazon</div>
+            <div class="text-ink-400 text-xs">Business metrics, top-N</div>
+          </a>
+          <a href="interview.html?company=meta" class="card" style="text-decoration: none; padding: 16px; text-align: center;">
+            <div style="font-size: 1.8rem;">👤</div>
+            <div style="font-weight: 600; margin-top: 4px;">Meta</div>
+            <div class="text-ink-400 text-xs">Funnels, social graph</div>
+          </a>
+          <a href="interview.html?company=netflix" class="card" style="text-decoration: none; padding: 16px; text-align: center;">
+            <div style="font-size: 1.8rem;">🎬</div>
+            <div style="font-weight: 600; margin-top: 4px;">Netflix</div>
+            <div class="text-ink-400 text-xs">Sessions, cohorts</div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ FINAL CTA ============================================ -->
+    <section class="container section">
+      <div class="card text-center" style="padding: 56px 32px; background: linear-gradient(180deg, var(--bg-1), var(--bg-0)); border-color: var(--line-strong);">
+        <div class="badge badge-cyan mb-4" style="margin: 0 auto;">
+          <span class="badge-dot"></span>
+          Ready when you are
+        </div>
+        <h2 class="mb-4">Your first query in 60 seconds.</h2>
+        <p class="text-ink-300 mb-8" style="max-width: 540px; margin: 0 auto 32px;">
+          No signup. No card. No setup. Open the chat, tell SQLSENSEI where you're starting, and write your first SELECT today.
+        </p>
+        <div class="flex gap-3 justify-center" style="flex-wrap: wrap;">
+          <a href="chat.html" class="btn btn-primary btn-lg">Begin Module 1.1 →</a>
+          <a href="playground.html" class="btn btn-secondary btn-lg">Open the Playground</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================ FOOTER ============================================ -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="flex items-center gap-3">
+        <span class="brand-mark" style="width: 24px; height: 24px; font-size: 0.6rem;">SQ</span>
+        <span class="mono text-sm">SQLSENSEI · v1.0 · Patient. Precise. Practical.</span>
+      </div>
+      <div class="flex gap-4 text-sm">
+        <a href="mindmap.html">Mind Map</a>
+        <a href="curriculum.html">Curriculum</a>
+        <a href="playground.html">Playground</a>
+        <a href="cheatsheet.html">Cheatsheet</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast-stack" id="toastStack"></div>
+
+  <script src="assets/js/data/curriculum.js"></script>
+  <script src="assets/js/mindmap.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.renderMindMap) window.renderMindMap('mindmap-preview', { compact: false });
+      if (window.renderLevels) window.renderLevels('levelsGrid');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SQL Interview Prep · SQLSENSEI</title>
+  <meta name="description" content="40+ real SQL interview questions tagged by company (Google, Amazon, Meta, Netflix...), difficulty, topic. Includes the tricky-but-easy ones that trip everyone up." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2306b6d4'/%3E%3Ctext x='50' y='66' text-anchor='middle' font-family='monospace' font-size='52' font-weight='700' fill='%23000'%3ES%3C/text%3E%3C/svg%3E" />
+  <style>
+    /* Interview-specific styles */
+    .iv-hero { padding: 56px 0 32px; }
+
+    .iv-filters {
+      position: sticky;
+      top: 65px;
+      z-index: 40;
+      background: rgba(7, 9, 13, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 16px 0;
+      margin-bottom: 32px;
+    }
+
+    .iv-filter-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .iv-filter-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-400);
+      margin-right: 4px;
+    }
+
+    .iv-chip {
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: var(--bg-2);
+      border: 1px solid var(--line);
+      color: var(--ink-300);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s var(--ease);
+      font-family: var(--font-sans);
+      white-space: nowrap;
+    }
+
+    .iv-chip:hover { background: var(--bg-3); color: var(--ink-100); border-color: var(--line-strong); }
+    .iv-chip.active { background: var(--cyan-400); color: var(--bg-0); border-color: var(--cyan-400); font-weight: 600; }
+
+    .iv-search {
+      background: var(--bg-1);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 14px 10px 38px;
+      color: var(--ink-100);
+      width: 280px;
+      font-size: 0.875rem;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: 12px center;
+    }
+
+    .iv-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .iv-stat-card {
+      background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    .iv-stat-card .num {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--cyan-400);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .iv-stat-card .label {
+      font-size: 0.8125rem;
+      color: var(--ink-300);
+    }
+
+    /* Companies grid */
+    .iv-companies {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 48px;
+    }
+
+    .iv-company-card {
+      background: var(--bg-1);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s var(--ease);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .iv-company-card:hover {
+      border-color: var(--cyan-400);
+      transform: translateY(-2px);
+    }
+
+    .iv-company-emoji { font-size: 1.5rem; flex-shrink: 0; }
+    .iv-company-name { font-weight: 600; font-size: 0.9rem; color: var(--ink-100); margin-bottom: 4px; }
+    .iv-company-focus { font-size: 0.75rem; color: var(--ink-400); line-height: 1.5; }
+
+    /* Question card */
+    .iv-q {
+      background: var(--bg-1);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      margin-bottom: 16px;
+      overflow: hidden;
+      transition: border-color 0.2s var(--ease);
+    }
+
+    .iv-q:hover { border-color: var(--line-strong); }
+
+    .iv-q.open { border-color: var(--cyan-400); }
+
+    .iv-q-header {
+      padding: 18px 22px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .iv-q-title {
+      flex: 1;
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--ink-100);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .iv-q-num {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--ink-500);
+      flex-shrink: 0;
+      padding-top: 3px;
+      min-width: 36px;
+    }
+
+    .iv-q-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .iv-difficulty {
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .iv-difficulty.easy { background: rgba(52,211,153,0.1); color: var(--emerald-400); }
+    .iv-difficulty.medium { background: rgba(251,191,36,0.1); color: var(--amber-400); }
+    .iv-difficulty.hard { background: rgba(251,113,133,0.1); color: var(--rose-400); }
+
+    .iv-tricky-flag {
+      padding: 3px 8px;
+      background: rgba(167,139,250,0.1);
+      color: var(--violet-400);
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+
+    .iv-q-chevron {
+      color: var(--ink-400);
+      transition: transform 0.2s var(--ease);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .iv-q.open .iv-q-chevron { transform: rotate(180deg); color: var(--cyan-400); }
+
+    .iv-q-body {
+      display: none;
+      padding: 0 22px 22px;
+      border-top: 1px solid var(--line);
+      padding-top: 18px;
+    }
+
+    .iv-q.open .iv-q-body { display: block; }
+
+    .iv-q-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 18px;
+    }
+
+    .iv-tag {
+      padding: 3px 9px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      font-weight: 500;
+      background: var(--bg-2);
+      color: var(--ink-300);
+      border: 1px solid var(--line);
+    }
+
+    .iv-tag.company { background: rgba(34,211,238,0.08); color: var(--cyan-400); border-color: rgba(34,211,238,0.2); }
+    .iv-tag.category { background: var(--bg-3); color: var(--ink-200); }
+    .iv-tag.freq { background: rgba(251,191,36,0.08); color: var(--amber-400); border-color: rgba(251,191,36,0.2); }
+
+    .iv-q-section {
+      margin-bottom: 18px;
+    }
+
+    .iv-q-section h4 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--cyan-400);
+      font-family: var(--font-mono);
+      margin-bottom: 10px;
+    }
+
+    .iv-q-section p, .iv-q-section li { color: var(--ink-200); font-size: 0.9rem; line-height: 1.7; }
+    .iv-q-section ul, .iv-q-section ol { padding-left: 22px; margin: 8px 0; }
+
+    .iv-q-section pre { font-size: 0.82rem; margin: 10px 0; }
+    .iv-q-section code { background: var(--bg-3); padding: 1px 6px; border-radius: 4px; font-size: 0.82em; color: var(--amber-300); }
+
+    .iv-q-section table { width: 100%; margin: 10px 0; border-collapse: collapse; font-size: 0.85rem; }
+    .iv-q-section table th, .iv-q-section table td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--line); }
+    .iv-q-section table th { background: var(--bg-2); color: var(--cyan-400); font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .iv-followups {
+      background: rgba(251,191,36,0.05);
+      border-left: 3px solid var(--amber-400);
+      padding: 12px 16px;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .iv-followups li { color: var(--ink-200); margin-bottom: 4px; }
+
+    .iv-tricky-banner {
+      background: linear-gradient(135deg, rgba(167,139,250,0.1), rgba(251,113,133,0.08));
+      border: 1px solid rgba(167,139,250,0.3);
+      border-radius: 14px;
+      padding: 24px 28px;
+      margin: 48px 0 24px;
+    }
+
+    .iv-tricky-banner h2 {
+      color: var(--violet-400);
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+
+    .iv-empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--ink-400);
+    }
+
+    @media (max-width: 700px) {
+      .iv-stats { grid-template-columns: repeat(2, 1fr); }
+      .iv-search { width: 100%; }
+      .iv-q-header { flex-direction: column; align-items: stretch; }
+      .iv-q-meta { justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-mark">SQ</span>
+        <span>SQL<span class="brand-suffix">SENSEI</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="mindmap.html">Mind Map</a></li>
+        <li><a href="curriculum.html">Curriculum</a></li>
+        <li><a href="chat.html">Chat</a></li>
+        <li><a href="playground.html">Playground</a></li>
+        <li><a href="interview.html" class="active">Interview</a></li>
+        <li><a href="patterns.html">Patterns</a></li>
+        <li><a href="cheatsheet.html">Cheatsheet</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <section class="container iv-hero">
+      <div class="badge badge-rose mb-4">
+        <span class="badge-dot"></span>
+        Real questions · Real companies · Real answers
+      </div>
+      <h1 style="font-size: clamp(2rem, 4vw, 3rem);">SQL Interview Prep</h1>
+      <p class="text-ink-300 mt-4" style="max-width: 720px;">
+        40+ SQL interview questions pulled from real interview reports at Google, Amazon, Meta, Netflix, Stripe, and more.
+        Each one tagged by company, difficulty, topic, and frequency. Plus the famous <strong>"easy but everyone gets wrong"</strong> set
+        — the gotchas senior engineers love to throw at you.
+      </p>
+
+      <div class="iv-stats mt-8">
+        <div class="iv-stat-card"><div class="num" id="statQuestions">—</div><div class="label">Questions</div></div>
+        <div class="iv-stat-card"><div class="num" id="statCompanies">—</div><div class="label">Companies covered</div></div>
+        <div class="iv-stat-card"><div class="num" id="statTricky">—</div><div class="label">Tricky gotchas</div></div>
+        <div class="iv-stat-card"><div class="num" id="statTopics">—</div><div class="label">Topic categories</div></div>
+      </div>
+    </section>
+
+    <!-- ============================================ COMPANIES ============================================ -->
+    <section class="container">
+      <h2 style="margin-bottom: 12px;">Companies & what they test</h2>
+      <p class="text-ink-300 mb-6">Click any company to see the questions they're known for.</p>
+      <div class="iv-companies" id="ivCompanies"></div>
+    </section>
+
+    <!-- ============================================ TRICKY ============================================ -->
+    <section class="container">
+      <div class="iv-tricky-banner">
+        <h2>💀 The Tricky-But-Easy Set</h2>
+        <p class="text-ink-200">These are easy questions where <strong>70%+ of candidates still get it wrong</strong>. NULL behavior, integer division, silent LEFT JOIN bugs. Know these cold — interviewers love throwing them at confident candidates as a sanity check.</p>
+        <div class="mt-4">
+          <button class="btn btn-secondary btn-sm" onclick="filterTricky()">Show only tricky questions →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ FILTERS ============================================ -->
+    <div class="iv-filters">
+      <div class="container">
+        <div class="iv-filter-row mb-3">
+          <span class="iv-filter-label">SEARCH</span>
+          <input type="text" id="ivSearch" class="iv-search" placeholder="Search questions, answers, topics…" />
+          <span style="flex: 1;"></span>
+          <button class="btn btn-ghost btn-sm" onclick="clearFilters()">Clear filters</button>
+        </div>
+
+        <div class="iv-filter-row mb-3">
+          <span class="iv-filter-label">DIFFICULTY</span>
+          <button class="iv-chip" data-filter="difficulty" data-value="Easy">Easy</button>
+          <button class="iv-chip" data-filter="difficulty" data-value="Medium">Medium</button>
+          <button class="iv-chip" data-filter="difficulty" data-value="Hard">Hard</button>
+        </div>
+
+        <div class="iv-filter-row mb-3">
+          <span class="iv-filter-label">CATEGORY</span>
+          <div id="ivCategoryFilters" style="display: flex; gap: 6px; flex-wrap: wrap;"></div>
+        </div>
+
+        <div class="iv-filter-row">
+          <span class="iv-filter-label">COMPANY</span>
+          <div id="ivCompanyFilters" style="display: flex; gap: 6px; flex-wrap: wrap;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================ QUESTIONS ============================================ -->
+    <section class="container">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2 id="ivResultsTitle">All Questions</h2>
+        <div class="text-ink-400 text-sm mono" id="ivResultsCount"></div>
+      </div>
+      <div id="ivQuestions"></div>
+    </section>
+
+    <!-- ============================================ TIPS ============================================ -->
+    <section class="container section">
+      <h2 class="mb-6">📚 Interview prep meta-tips</h2>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="card">
+          <h3 style="color: var(--cyan-400); font-size: 0.9rem; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">⚡ The 80/20 of SQL interviews</h3>
+          <ul style="padding-left: 20px; color: var(--ink-200); line-height: 1.8;">
+            <li><strong>JOINs</strong> — 90% of all questions involve at least one JOIN</li>
+            <li><strong>GROUP BY + aggregates</strong> — every "total per X" question</li>
+            <li><strong>Window functions</strong> — RANK, ROW_NUMBER, LAG, running totals</li>
+            <li><strong>NULL behavior</strong> — the #1 gotcha set</li>
+            <li><strong>Top-N per group</strong> — asked in some form by everyone</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3 style="color: var(--amber-400); font-size: 0.9rem; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">🎯 How to answer in interviews</h3>
+          <ol style="padding-left: 20px; color: var(--ink-200); line-height: 1.8;">
+            <li><strong>Restate the question</strong> in your own words</li>
+            <li><strong>Ask about edge cases</strong> — NULLs, ties, empty tables</li>
+            <li><strong>Talk through the approach</strong> before coding</li>
+            <li><strong>Write the query</strong>, explaining each clause</li>
+            <li><strong>Mention alternatives</strong> — "we could also use a CTE here"</li>
+            <li><strong>Discuss performance</strong> — what indexes would help?</li>
+          </ol>
+        </div>
+
+        <div class="card">
+          <h3 style="color: var(--emerald-400); font-size: 0.9rem; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">🛠 Where to practice</h3>
+          <ul style="padding-left: 20px; color: var(--ink-200); line-height: 1.8;">
+            <li><strong>LeetCode SQL</strong> — pattern matching, every classic question</li>
+            <li><strong>HackerRank SQL</strong> — Advanced Select, Aggregations</li>
+            <li><strong>StrataScratch</strong> — real company questions</li>
+            <li><strong>DataLemur</strong> — focused on FAANG data science roles</li>
+            <li><strong>Mode SQL Tutorial</strong> — interactive on real data</li>
+            <li><strong>Our Playground</strong> — practice every concept from the curriculum</li>
+          </ul>
+          <a href="playground.html" class="btn btn-ghost btn-sm mt-4">Open Playground →</a>
+        </div>
+
+        <div class="card">
+          <h3 style="color: var(--rose-400); font-size: 0.9rem; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">⚠️ Mistakes that fail interviews</h3>
+          <ul style="padding-left: 20px; color: var(--ink-200); line-height: 1.8;">
+            <li>Jumping straight to writing without clarifying</li>
+            <li>Using <code>SELECT *</code> when specific columns are needed</li>
+            <li>Forgetting NULL handling</li>
+            <li>Using <code>= NULL</code> instead of <code>IS NULL</code></li>
+            <li>WHERE with aggregates (should be HAVING)</li>
+            <li>Not knowing the difference between RANK/DENSE_RANK/ROW_NUMBER</li>
+            <li>No idea about indexes when asked "how would you optimize?"</li>
+            <li>Silence — talk through your thinking</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ TYPES OF ROUNDS ============================================ -->
+    <section class="container section">
+      <h2 class="mb-6">🎤 What SQL rounds actually look like</h2>
+      <div class="grid grid-cols-3 gap-4">
+        <div class="card">
+          <div class="badge badge-cyan mb-4" style="font-size: 0.65rem;">PHONE SCREEN · 30 MIN</div>
+          <h3>The warmup</h3>
+          <p class="text-ink-300 text-sm mt-2">2-3 medium questions. They want to see you can write a JOIN with a GROUP BY without freezing. Pattern matches everything in our Level 2-3.</p>
+          <p class="text-ink-400 text-xs mt-3 mono">Common companies: TCS, Infosys, mid-size SaaS, most startups</p>
+        </div>
+        <div class="card">
+          <div class="badge badge-amber mb-4" style="font-size: 0.65rem;">ONSITE · 45-60 MIN</div>
+          <h3>The deep dive</h3>
+          <p class="text-ink-300 text-sm mt-2">1 hard problem (window functions, gaps/islands, retention) with multiple follow-ups. They want to see how you think under pressure and iterate. Level 4 territory.</p>
+          <p class="text-ink-400 text-xs mt-3 mono">Common companies: Google, Meta, Amazon, Stripe, Airbnb, Netflix</p>
+        </div>
+        <div class="card">
+          <div class="badge badge-rose mb-4" style="font-size: 0.65rem;">SYSTEM DESIGN · 60 MIN</div>
+          <h3>The schema design</h3>
+          <p class="text-ink-300 text-sm mt-2">"Design a schema for X" + queries against it. Tests normalization, indexing intuition, trade-offs (OLTP vs OLAP). Level 5 + interview prep here.</p>
+          <p class="text-ink-400 text-xs mt-3 mono">Common companies: Senior+ roles at most FAANG, data engineering roles</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="container section">
+      <div class="card text-center" style="padding: 48px 32px;">
+        <h2 class="mb-4">Practice these in the Playground</h2>
+        <p class="text-ink-300 mb-6" style="max-width: 540px; margin: 0 auto 24px;">The dataset on this site has all 5 tables from our curriculum. Open the Playground and copy any of these queries to see them run live.</p>
+        <div class="flex gap-3 justify-center" style="flex-wrap: wrap;">
+          <a href="playground.html" class="btn btn-primary">Open Playground →</a>
+          <a href="chat.html" class="btn btn-secondary">Back to lessons</a>
+          <a href="cheatsheet.html" class="btn btn-ghost">Cheatsheet</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="flex items-center gap-3">
+        <span class="brand-mark" style="width: 24px; height: 24px; font-size: 0.6rem;">SQ</span>
+        <span class="mono text-sm">SQLSENSEI</span>
+      </div>
+      <div class="flex gap-4 text-sm">
+        <a href="mindmap.html">Mind Map</a>
+        <a href="chat.html">Chat</a>
+        <a href="playground.html">Playground</a>
+        <a href="cheatsheet.html">Cheatsheet</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast-stack" id="toastStack"></div>
+
+  <script src="assets/js/data/curriculum.js"></script>
+  <script src="assets/js/data/interview.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/interview.js"></script>
+</body>
+</html>

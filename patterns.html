@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SQL Patterns Library · SQLSENSEI</title>
+  <meta name="description" content="The 25 SQL patterns and recipes that solve 95% of real-world data problems. Copy-paste ready, dialect-noted." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2306b6d4'/%3E%3Ctext x='50' y='66' text-anchor='middle' font-family='monospace' font-size='52' font-weight='700' fill='%23000'%3ES%3C/text%3E%3C/svg%3E" />
+  <style>
+    .pat-grid { display: grid; grid-template-columns: 240px 1fr; gap: 32px; }
+    .pat-toc { position: sticky; top: 80px; height: fit-content; background: var(--bg-1); border: 1px solid var(--line); border-radius: 12px; padding: 20px; max-height: calc(100vh - 100px); overflow-y: auto; }
+    .pat-toc h3 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-400); font-family: var(--font-mono); margin-bottom: 12px; }
+    .pat-toc a { display: block; padding: 6px 8px; border-radius: 6px; color: var(--ink-300); font-size: 0.85rem; margin-bottom: 2px; }
+    .pat-toc a:hover { background: var(--bg-2); color: var(--ink-100); }
+    .pat { background: var(--bg-1); border: 1px solid var(--line); border-radius: 14px; padding: 28px; margin-bottom: 24px; scroll-margin-top: 80px; }
+    .pat h2 { font-size: 1.35rem; margin-bottom: 6px; display: flex; align-items: center; gap: 12px; }
+    .pat .pat-num { font-family: var(--font-mono); font-size: 0.75rem; color: var(--ink-500); background: var(--bg-2); padding: 4px 10px; border-radius: 6px; }
+    .pat .pat-tagline { color: var(--ink-400); font-size: 0.9rem; font-style: italic; margin-bottom: 16px; }
+    .pat .pat-when { background: rgba(34,211,238,0.05); border-left: 3px solid var(--cyan-400); padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 14px 0; color: var(--ink-200); font-size: 0.875rem; }
+    .pat .pat-when strong { color: var(--cyan-400); }
+    .pat pre { font-size: 0.82rem; margin: 12px 0; }
+    .pat p { font-size: 0.9rem; color: var(--ink-200); margin: 8px 0; }
+    .pat code { font-size: 0.82em; }
+
+    @media (max-width: 900px) {
+      .pat-grid { grid-template-columns: 1fr; }
+      .pat-toc { position: relative; top: 0; max-height: 320px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-mark">SQ</span>
+        <span>SQL<span class="brand-suffix">SENSEI</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="mindmap.html">Mind Map</a></li>
+        <li><a href="curriculum.html">Curriculum</a></li>
+        <li><a href="chat.html">Chat</a></li>
+        <li><a href="playground.html">Playground</a></li>
+        <li><a href="interview.html">Interview</a></li>
+        <li><a href="patterns.html" class="active">Patterns</a></li>
+        <li><a href="cheatsheet.html">Cheatsheet</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <section class="container" style="padding: 56px 0 32px;">
+      <div class="badge badge-violet mb-4"><span class="badge-dot"></span>25 patterns that solve 95% of real problems</div>
+      <h1 style="font-size: clamp(2rem, 4vw, 3rem);">SQL Patterns Library</h1>
+      <p class="text-ink-300 mt-4" style="max-width: 720px;">
+        Common SQL recipes you'll reach for over and over in real jobs. Copy-paste ready,
+        with dialect notes. Bookmark this page.
+      </p>
+    </section>
+
+    <section class="container section-sm">
+      <div class="pat-grid">
+
+        <!-- TOC -->
+        <aside class="pat-toc">
+          <h3>📚 Patterns</h3>
+          <a href="#p01">01 · Top-N per group</a>
+          <a href="#p02">02 · Running total</a>
+          <a href="#p03">03 · Moving average</a>
+          <a href="#p04">04 · Latest row per group</a>
+          <a href="#p05">05 · Find duplicates</a>
+          <a href="#p06">06 · Delete duplicates</a>
+          <a href="#p07">07 · Pivot rows to columns</a>
+          <a href="#p08">08 · Unpivot columns to rows</a>
+          <a href="#p09">09 · Find gaps in sequence</a>
+          <a href="#p10">10 · Gaps and islands</a>
+          <a href="#p11">11 · Sessionization</a>
+          <a href="#p12">12 · Cohort retention</a>
+          <a href="#p13">13 · Percentile / quartile</a>
+          <a href="#p14">14 · Median</a>
+          <a href="#p15">15 · Month-over-month growth</a>
+          <a href="#p16">16 · Year-to-date</a>
+          <a href="#p17">17 · Calendar / fill missing dates</a>
+          <a href="#p18">18 · Random sample</a>
+          <a href="#p19">19 · Anti-join (NOT EXISTS)</a>
+          <a href="#p20">20 · Recursive hierarchy</a>
+          <a href="#p21">21 · Upsert</a>
+          <a href="#p22">22 · Conditional aggregation</a>
+          <a href="#p23">23 · String split / aggregate</a>
+          <a href="#p24">24 · Window LAG diff</a>
+          <a href="#p25">25 · Bulk insert from query</a>
+        </aside>
+
+        <div>
+
+          <!-- ========== 01 ========== -->
+          <div class="pat" id="p01">
+            <h2><span class="pat-num">01</span> Top-N per group</h2>
+            <p class="pat-tagline">Get the top N rows within each group (top 3 products per category, etc).</p>
+            <div class="pat-when"><strong>When:</strong> "Top X for each Y" — the most common analytics question.</div>
+<pre><code><span class="sql-keyword">WITH</span> ranked <span class="sql-keyword">AS</span> (
+  <span class="sql-keyword">SELECT</span> name, category, price,
+    <span class="sql-fn">DENSE_RANK</span>() <span class="sql-keyword">OVER</span> (<span class="sql-keyword">PARTITION BY</span> category <span class="sql-keyword">ORDER BY</span> price <span class="sql-keyword">DESC</span>) <span class="sql-keyword">AS</span> rnk
+  <span class="sql-keyword">FROM</span> products
+)
+<span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> ranked <span class="sql-keyword">WHERE</span> rnk &lt;= <span class="sql-number">3</span>;</code></pre>
+            <p>Use <code>ROW_NUMBER</code> for exactly N (ties broken arbitrarily) · <code>RANK</code> for ties skipping · <code>DENSE_RANK</code> for distinct positions.</p>
+          </div>
+
+          <!-- ========== 02 ========== -->
+          <div class="pat" id="p02">
+            <h2><span class="pat-num">02</span> Running total</h2>
+            <p class="pat-tagline">Cumulative sum that grows over time.</p>
+            <div class="pat-when"><strong>When:</strong> account balances, sales-to-date, leaderboard scores.</div>
+<pre><code><span class="sql-keyword">SELECT</span> order_id, order_date, total_amount,
+  <span class="sql-fn">SUM</span>(total_amount) <span class="sql-keyword">OVER</span> (<span class="sql-keyword">ORDER BY</span> order_date) <span class="sql-keyword">AS</span> running_total
+<span class="sql-keyword">FROM</span> orders;</code></pre>
+            <p>Per-group running total: add <code>PARTITION BY group_col</code>.</p>
+          </div>
+
+          <!-- ========== 03 ========== -->
+          <div class="pat" id="p03">
+            <h2><span class="pat-num">03</span> Moving average (N-day)</h2>
+            <p class="pat-tagline">Smooth out noisy time series.</p>
+            <div class="pat-when"><strong>When:</strong> stock prices, traffic graphs, smoothing seasonality.</div>
+<pre><code><span class="sql-keyword">SELECT</span> order_date, total_amount,
+  <span class="sql-fn">AVG</span>(total_amount) <span class="sql-keyword">OVER</span> (
+    <span class="sql-keyword">ORDER BY</span> order_date
+    <span class="sql-keyword">ROWS BETWEEN</span> <span class="sql-number">6</span> <span class="sql-keyword">PRECEDING AND CURRENT ROW</span>
+  ) <span class="sql-keyword">AS</span> ma_7day
+<span class="sql-keyword">FROM</span> orders;</code></pre>
+            <p><code>ROWS BETWEEN N PRECEDING AND CURRENT ROW</code> gives an N+1 row trailing window.</p>
+          </div>
+
+          <!-- ========== 04 ========== -->
+          <div class="pat" id="p04">
+            <h2><span class="pat-num">04</span> Latest row per group</h2>
+            <p class="pat-tagline">Most recent order per customer, etc.</p>
+            <div class="pat-when"><strong>When:</strong> "current state per X" — last login, most recent transaction.</div>
+<pre><code><span class="sql-keyword">WITH</span> ranked <span class="sql-keyword">AS</span> (
+  <span class="sql-keyword">SELECT</span> *,
+    <span class="sql-fn">ROW_NUMBER</span>() <span class="sql-keyword">OVER</span> (<span class="sql-keyword">PARTITION BY</span> customer_id <span class="sql-keyword">ORDER BY</span> order_date <span class="sql-keyword">DESC</span>) <span class="sql-keyword">AS</span> rn
+  <span class="sql-keyword">FROM</span> orders
+)
+<span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> ranked <span class="sql-keyword">WHERE</span> rn = <span class="sql-number">1</span>;</code></pre>
+          </div>
+
+          <!-- ========== 05 ========== -->
+          <div class="pat" id="p05">
+            <h2><span class="pat-num">05</span> Find duplicates</h2>
+            <p class="pat-tagline">Detect rows that shouldn't exist twice.</p>
+            <div class="pat-when"><strong>When:</strong> data quality checks, dedupe planning.</div>
+<pre><code><span class="sql-keyword">SELECT</span> email, <span class="sql-fn">COUNT</span>(*) <span class="sql-keyword">AS</span> dup_count
+<span class="sql-keyword">FROM</span> customers
+<span class="sql-keyword">GROUP BY</span> email
+<span class="sql-keyword">HAVING</span> <span class="sql-fn">COUNT</span>(*) &gt; <span class="sql-number">1</span>;</code></pre>
+          </div>
+
+          <!-- ========== 06 ========== -->
+          <div class="pat" id="p06">
+            <h2><span class="pat-num">06</span> Delete duplicates (keep one)</h2>
+            <p class="pat-tagline">De-duplicate, retaining the row with the lowest ID.</p>
+            <div class="pat-when"><strong>When:</strong> data cleanup — always run inside a transaction.</div>
+<pre><code><span class="sql-keyword">DELETE FROM</span> customers
+<span class="sql-keyword">WHERE</span> customer_id <span class="sql-keyword">NOT IN</span> (
+  <span class="sql-keyword">SELECT</span> <span class="sql-fn">MIN</span>(customer_id) <span class="sql-keyword">FROM</span> customers <span class="sql-keyword">GROUP BY</span> email
+);</code></pre>
+            <p>⚠️ Always preview with <code>SELECT</code> first. Wrap in <code>BEGIN ... COMMIT</code>.</p>
+          </div>
+
+          <!-- ========== 07 ========== -->
+          <div class="pat" id="p07">
+            <h2><span class="pat-num">07</span> Pivot rows to columns</h2>
+            <p class="pat-tagline">Transform long format to wide format (no PIVOT needed).</p>
+            <div class="pat-when"><strong>When:</strong> dashboards expecting one column per category.</div>
+<pre><code><span class="sql-keyword">SELECT</span> customer_id,
+  <span class="sql-fn">SUM</span>(<span class="sql-keyword">CASE WHEN</span> status = <span class="sql-string">'delivered'</span> <span class="sql-keyword">THEN</span> <span class="sql-number">1</span> <span class="sql-keyword">ELSE</span> <span class="sql-number">0</span> <span class="sql-keyword">END</span>) <span class="sql-keyword">AS</span> delivered,
+  <span class="sql-fn">SUM</span>(<span class="sql-keyword">CASE WHEN</span> status = <span class="sql-string">'pending'</span> <span class="sql-keyword">THEN</span> <span class="sql-number">1</span> <span class="sql-keyword">ELSE</span> <span class="sql-number">0</span> <span class="sql-keyword">END</span>) <span class="sql-keyword">AS</span> pending,
+  <span class="sql-fn">SUM</span>(<span class="sql-keyword">CASE WHEN</span> status = <span class="sql-string">'cancelled'</span> <span class="sql-keyword">THEN</span> <span class="sql-number">1</span> <span class="sql-keyword">ELSE</span> <span class="sql-number">0</span> <span class="sql-keyword">END</span>) <span class="sql-keyword">AS</span> cancelled
+<span class="sql-keyword">FROM</span> orders <span class="sql-keyword">GROUP BY</span> customer_id;</code></pre>
+            <p><strong>Conditional aggregation</strong> works on every database, unlike vendor-specific <code>PIVOT</code> syntax.</p>
+          </div>
+
+          <!-- ========== 08 ========== -->
+          <div class="pat" id="p08">
+            <h2><span class="pat-num">08</span> Unpivot columns to rows</h2>
+            <p class="pat-tagline">Reverse of pivot — wide to long.</p>
+            <div class="pat-when"><strong>When:</strong> normalizing a denormalized export, prepping data for BI.</div>
+<pre><code><span class="sql-keyword">SELECT</span> id, <span class="sql-string">'q1'</span> <span class="sql-keyword">AS</span> quarter, q1_sales <span class="sql-keyword">AS</span> sales <span class="sql-keyword">FROM</span> sales_wide
+<span class="sql-keyword">UNION ALL</span>
+<span class="sql-keyword">SELECT</span> id, <span class="sql-string">'q2'</span>, q2_sales <span class="sql-keyword">FROM</span> sales_wide
+<span class="sql-keyword">UNION ALL</span>
+<span class="sql-keyword">SELECT</span> id, <span class="sql-string">'q3'</span>, q3_sales <span class="sql-keyword">FROM</span> sales_wide
+<span class="sql-keyword">UNION ALL</span>
+<span class="sql-keyword">SELECT</span> id, <span class="sql-string">'q4'</span>, q4_sales <span class="sql-keyword">FROM</span> sales_wide;</code></pre>
+          </div>
+
+          <!-- ========== 09 ========== -->
+          <div class="pat" id="p09">
+            <h2><span class="pat-num">09</span> Find gaps in a sequence</h2>
+            <p class="pat-tagline">Missing IDs, missing dates.</p>
+            <div class="pat-when"><strong>When:</strong> auditing data integrity, finding missing invoice numbers.</div>
+<pre><code><span class="sql-keyword">SELECT</span> id + <span class="sql-number">1</span> <span class="sql-keyword">AS</span> missing_id_start,
+  <span class="sql-fn">LEAD</span>(id) <span class="sql-keyword">OVER</span> (<span class="sql-keyword">ORDER BY</span> id) - <span class="sql-number">1</span> <span class="sql-keyword">AS</span> missing_id_end
+<span class="sql-keyword">FROM</span> invoices
+<span class="sql-keyword">WHERE</span> <span class="sql-fn">LEAD</span>(id) <span class="sql-keyword">OVER</span> (<span class="sql-keyword">ORDER BY</span> id) - id &gt; <span class="sql-number">1</span>;</code></pre>
+          </div>
+
+          <!-- ========== 10 ========== -->
+          <div class="pat" id="p10">
+            <h2><span class="pat-num">10</span> Gaps and islands (consecutive runs)</h2>
+            <p class="pat-tagline">Group consecutive rows with the same value or consecutive dates.</p>
+            <div class="pat-when"><strong>When:</strong> longest streaks, consecutive wins, sessions.</div>
+<pre><code><span class="sql-keyword">WITH</span> grp <span class="sql-keyword">AS</span> (
+  <span class="sql-keyword">SELECT</span> user_id, login_date,
+    login_date - <span class="sql-fn">ROW_NUMBER</span>() <span class="sql-keyword">OVER</span> (<span class="sql-keyword">PARTITION BY</span> user_id <span class="sql-keyword">ORDER BY</span> login_date) * <span class="sql-keyword">INTERVAL</span> <span class="sql-string">'1 day'</span> <span class="sql-keyword">AS</span> streak_id
+  <span class="sql-keyword">FROM</span> logins
+)
+<span class="sql-keyword">SELECT</span> user_id, <span class="sql-fn">MIN</span>(login_date) <span class="sql-keyword">AS</span> start_date, <span class="sql-fn">MAX</span>(login_date) <span class="sql-keyword">AS</span> end_date, <span class="sql-fn">COUNT</span>(*) <span class="sql-keyword">AS</span> streak_length
+<span class="sql-keyword">FROM</span> grp <span class="sql-keyword">GROUP BY</span> user_id, streak_id;</code></pre>
+          </div>
+
+          <!-- ========== 11 ========== -->
+          <div class="pat" id="p11">
+            <h2><span class="pat-num">11</span> Sessionization (group events by inactivity gap)</h2>
+            <p class="pat-tagline">Bucket events into sessions when gap > N minutes.</p>
+            <div class="pat-when"><strong>When:</strong> product analytics, user behavior funnels.</div>
+<pre><code><span class="sql-keyword">WITH</span> gapped <span class="sql-keyword">AS</span> (
+  <span class="sql-keyword">SELECT</span> user_id, ts,
+    <span class="sql-keyword">CASE WHEN</span> ts - <span class="sql-fn">LAG</span>(ts) <span class="sql-keyword">OVER</span> (<span class="sql-keyword">PARTITION BY</span> user_id <span class="sql-keyword">ORDER BY</span> ts) &gt; <span class="sql-keyword">INTERVAL</span> <span class="sql-string">'30 minutes'</span>
+         <span class="sql-keyword">THEN</span> <span class="sql-number">1</span> <span class="sql-keyword">ELSE</span> <span class="sql-number">0</span> <span class="sql-keyword">END</span> <span class="sql-keyword">AS</span> new_session
+  <span class="sql-keyword">FROM</span> events
+)
+<span class="sql-keyword">SELECT</span> user_id, ts,
+  <span class="sql-fn">SUM</span>(new_session) <span class="sql-keyword">OVER</span> (<span class="sql-keyword">PARTITION BY</span> user_id <span class="sql-keyword">ORDER BY</span> ts) <span class="sql-keyword">AS</span> session_id
+<span class="sql-keyword">FROM</span> gapped;</code></pre>
+          </div>
+
+          <!-- ========== 12 ========== -->
+          <div class="pat" id="p12">
+            <h2><span class="pat-num">12</span> Cohort retention</h2>
+            <p class="pat-tagline">% of users from cohort X still active in month X+N.</p>
+            <div class="pat-when"><strong>When:</strong> startup metrics, product analytics, growth dashboards.</div>
+<pre><code><span class="sql-keyword">WITH</span> cohorts <span class="sql-keyword">AS</span> (
+  <span class="sql-keyword">SELECT</span> user_id, <span class="sql-fn">DATE_TRUNC</span>(<span class="sql-string">'month'</span>, signup_date) <span class="sql-keyword">AS</span> cohort_month
+  <span class="sql-keyword">FROM</span> users
+)
+<span class="sql-keyword">SELECT</span> c.cohort_month,
+  <span class="sql-fn">DATE_PART</span>(<span class="sql-string">'month'</span>, <span class="sql-fn">AGE</span>(a.activity_month, c.cohort_month)) <span class="sql-keyword">AS</span> months_since,
+  <span class="sql-fn">COUNT</span>(<span class="sql-keyword">DISTINCT</span> a.user_id) <span class="sql-keyword">AS</span> active_users
+<span class="sql-keyword">FROM</span> cohorts c
+<span class="sql-keyword">JOIN</span> activity a <span class="sql-keyword">USING</span> (user_id)
+<span class="sql-keyword">GROUP BY</span> c.cohort_month, months_since;</code></pre>
+          </div>
+
+          <!-- ========== 13 ========== -->
+          <div class="pat" id="p13">
+            <h2><span class="pat-num">13</span> Percentile / quartile</h2>
+            <p class="pat-tagline">Find the 75th percentile salary.</p>
+            <div class="pat-when"><strong>When:</strong> statistical analysis, removing outliers.</div>
+<pre><code><span class="sql-comment">-- PostgreSQL / Oracle</span>
+<span class="sql-keyword">SELECT</span> <span class="sql-fn">PERCENTILE_CONT</span>(<span class="sql-number">0.75</span>) <span class="sql-keyword">WITHIN GROUP</span> (<span class="sql-keyword">ORDER BY</span> salary) <span class="sql-keyword">AS</span> p75
+<span class="sql-keyword">FROM</span> employees;
+
+<span class="sql-comment">-- Portable using NTILE</span>
+<span class="sql-keyword">SELECT</span> <span class="sql-fn">MAX</span>(salary) <span class="sql-keyword">FROM</span> (
+  <span class="sql-keyword">SELECT</span> salary, <span class="sql-fn">NTILE</span>(<span class="sql-number">4</span>) <span class="sql-keyword">OVER</span> (<span class="sql-keyword">ORDER BY</span> salary) <span class="sql-keyword">AS</span> q
+  <span class="sql-keyword">FROM</span> employees
+) t <span class="sql-keyword">WHERE</span> q = <span class="sql-number">3</span>;</code></pre>
+          </div>
+
+          <!-- ========== 14 ========== -->
+          <div class="pat" id="p14">
+            <h2><span class="pat-num">14</span> Median (no MEDIAN function)</h2>
+            <p class="pat-tagline">Portable median computation.</p>
+            <div class="pat-when"><strong>When:</strong> robust to outliers, salary reporting, etc.</div>
+<pre><code><span class="sql-keyword">WITH</span> ranked <span class="sql-keyword">AS</span> (
+  <span class="sql-keyword">SELECT</span> salary,
+    <span class="sql-fn">ROW_NUMBER</span>() <span class="sql-keyword">OVER</span> (<span class="sql-keyword">ORDER BY</span> salary) <span class="sql-keyword">AS</span> rn,
+    <span class="sql-fn">COUNT</span>(*) <span class="sql-keyword">OVER</span> () <span class="sql-keyword">AS</span> cnt
+  <span class="sql-keyword">FROM</span> employees
+)
+<span class="sql-keyword">SELECT</span> <span class="sql-fn">AVG</span>(salary) <span class="sql-keyword">AS</span> median
+<span class="sql-keyword">FROM</span> ranked
+<span class="sql-keyword">WHERE</span> rn <span class="sql-keyword">IN</span> ((cnt + <span class="sql-number">1</span>) / <span class="sql-number">2</span>, (cnt + <span class="sql-number">2</span>) / <span class="sql-number">2</span>);</code></pre>
+          </div>
+
+          <!-- ========== 15 ========== -->
+          <div class="pat" id="p15">
+            <h2><span class="pat-num">15</span> Month-over-month growth %</h2>
+            <p class="pat-tagline">Compare each month to the previous.</p>
+            <div class="pat-when"><strong>When:</strong> executive dashboards, board decks, finance reports.</div>
+<pre><code><span class="sql-keyword">WITH</span> monthly <span class="sql-keyword">AS</span> (
+  <span class="sql-keyword">SELECT</span> <span class="sql-fn">DATE_TRUNC</span>(<span class="sql-string">'month'</span>, order_date) <span class="sql-keyword">AS</span> month, <span class="sql-fn">SUM</span>(total_amount) <span class="sql-keyword">AS</span> rev
+  <span class="sql-keyword">FROM</span> orders <span class="sql-keyword">GROUP BY</span> <span class="sql-fn">DATE_TRUNC</span>(<span class="sql-string">'month'</span>, order_date)
+)
+<span class="sql-keyword">SELECT</span> month, rev,
+  <span class="sql-fn">LAG</span>(rev) <span class="sql-keyword">OVER</span> (<span class="sql-keyword">ORDER BY</span> month) <span class="sql-keyword">AS</span> prev_rev,
+  <span class="sql-fn">ROUND</span>(<span class="sql-number">100.0</span> * (rev - <span class="sql-fn">LAG</span>(rev) <span class="sql-keyword">OVER</span> (<span class="sql-keyword">ORDER BY</span> month)) / <span class="sql-fn">LAG</span>(rev) <span class="sql-keyword">OVER</span> (<span class="sql-keyword">ORDER BY</span> month), <span class="sql-number">2</span>) <span class="sql-keyword">AS</span> growth_pct
+<span class="sql-keyword">FROM</span> monthly;</code></pre>
+          </div>
+
+          <!-- ========== 16 ========== -->
+          <div class="pat" id="p16">
+            <h2><span class="pat-num">16</span> Year-to-date (YTD)</h2>
+            <p class="pat-tagline">Cumulative within the current year.</p>
+            <div class="pat-when"><strong>When:</strong> finance reports, performance tracking.</div>
+<pre><code><span class="sql-keyword">SELECT</span> order_date, total_amount,
+  <span class="sql-fn">SUM</span>(total_amount) <span class="sql-keyword">OVER</span> (
+    <span class="sql-keyword">PARTITION BY</span> <span class="sql-fn">EXTRACT</span>(<span class="sql-keyword">YEAR FROM</span> order_date)
+    <span class="sql-keyword">ORDER BY</span> order_date
+  ) <span class="sql-keyword">AS</span> ytd
+<span class="sql-keyword">FROM</span> orders;</code></pre>
+          </div>
+
+          <!-- ========== 17 ========== -->
+          <div class="pat" id="p17">
+            <h2><span class="pat-num">17</span> Fill missing dates (calendar table)</h2>
+            <p class="pat-tagline">Zero out days with no activity.</p>
+            <div class="pat-when"><strong>When:</strong> time-series charts that need every day shown.</div>
+<pre><code><span class="sql-comment">-- PostgreSQL</span>
+<span class="sql-keyword">WITH</span> cal <span class="sql-keyword">AS</span> (
+  <span class="sql-keyword">SELECT</span> <span class="sql-fn">generate_series</span>(<span class="sql-fn">CURRENT_DATE</span> - <span class="sql-keyword">INTERVAL</span> <span class="sql-string">'29 days'</span>, <span class="sql-fn">CURRENT_DATE</span>, <span class="sql-keyword">INTERVAL</span> <span class="sql-string">'1 day'</span>)::<span class="sql-keyword">DATE</span> <span class="sql-keyword">AS</span> day
+)
+<span class="sql-keyword">SELECT</span> cal.day, <span class="sql-fn">COALESCE</span>(<span class="sql-fn">SUM</span>(o.total_amount), <span class="sql-number">0</span>) <span class="sql-keyword">AS</span> revenue
+<span class="sql-keyword">FROM</span> cal <span class="sql-keyword">LEFT JOIN</span> orders o <span class="sql-keyword">ON</span> o.order_date = cal.day
+<span class="sql-keyword">GROUP BY</span> cal.day <span class="sql-keyword">ORDER BY</span> cal.day;</code></pre>
+          </div>
+
+          <!-- ========== 18 ========== -->
+          <div class="pat" id="p18">
+            <h2><span class="pat-num">18</span> Random sample</h2>
+            <p class="pat-tagline">N random rows.</p>
+            <div class="pat-when"><strong>When:</strong> spot-check large tables, build sampled training sets.</div>
+<pre><code><span class="sql-comment">-- PG / SQLite</span>
+<span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> orders <span class="sql-keyword">ORDER BY</span> <span class="sql-fn">RANDOM</span>() <span class="sql-keyword">LIMIT</span> <span class="sql-number">100</span>;
+
+<span class="sql-comment">-- MySQL</span>
+<span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> orders <span class="sql-keyword">ORDER BY</span> <span class="sql-fn">RAND</span>() <span class="sql-keyword">LIMIT</span> <span class="sql-number">100</span>;
+
+<span class="sql-comment">-- PG: faster on huge tables (TABLESAMPLE)</span>
+<span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> orders <span class="sql-keyword">TABLESAMPLE BERNOULLI</span> (<span class="sql-number">1</span>);  <span class="sql-comment">-- ~1% sample</span></code></pre>
+          </div>
+
+          <!-- ========== 19 ========== -->
+          <div class="pat" id="p19">
+            <h2><span class="pat-num">19</span> Anti-join (NOT EXISTS)</h2>
+            <p class="pat-tagline">Find rows in A with no matching row in B.</p>
+            <div class="pat-when"><strong>When:</strong> "customers who haven't ordered", "products never sold", etc.</div>
+<pre><code><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> customers c
+<span class="sql-keyword">WHERE NOT EXISTS</span> (
+  <span class="sql-keyword">SELECT</span> <span class="sql-number">1</span> <span class="sql-keyword">FROM</span> orders o <span class="sql-keyword">WHERE</span> o.customer_id = c.customer_id
+);</code></pre>
+            <p><strong>Faster and NULL-safer than <code>NOT IN</code>.</strong></p>
+          </div>
+
+          <!-- ========== 20 ========== -->
+          <div class="pat" id="p20">
+            <h2><span class="pat-num">20</span> Recursive hierarchy (org chart)</h2>
+            <p class="pat-tagline">Traverse tree structures: managers → reports → reports' reports.</p>
+            <div class="pat-when"><strong>When:</strong> org charts, category trees, comment threads.</div>
+<pre><code><span class="sql-keyword">WITH RECURSIVE</span> org <span class="sql-keyword">AS</span> (
+  <span class="sql-comment">-- Anchor: top-level managers</span>
+  <span class="sql-keyword">SELECT</span> employee_id, name, manager_id, <span class="sql-number">1</span> <span class="sql-keyword">AS</span> level
+  <span class="sql-keyword">FROM</span> employees <span class="sql-keyword">WHERE</span> manager_id <span class="sql-keyword">IS NULL</span>
+
+  <span class="sql-keyword">UNION ALL</span>
+
+  <span class="sql-comment">-- Recursive: each level reporting to the previous</span>
+  <span class="sql-keyword">SELECT</span> e.employee_id, e.name, e.manager_id, org.level + <span class="sql-number">1</span>
+  <span class="sql-keyword">FROM</span> employees e
+  <span class="sql-keyword">JOIN</span> org <span class="sql-keyword">ON</span> e.manager_id = org.employee_id
+)
+<span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> org <span class="sql-keyword">ORDER BY</span> level;</code></pre>
+          </div>
+
+          <!-- ========== 21 ========== -->
+          <div class="pat" id="p21">
+            <h2><span class="pat-num">21</span> Upsert (INSERT or UPDATE)</h2>
+            <p class="pat-tagline">Insert a row, but if it already exists, update it instead.</p>
+            <div class="pat-when"><strong>When:</strong> sync jobs, idempotent ingestion, settings tables.</div>
+<pre><code><span class="sql-comment">-- PostgreSQL</span>
+<span class="sql-keyword">INSERT INTO</span> products (product_id, name, price)
+<span class="sql-keyword">VALUES</span> (<span class="sql-number">101</span>, <span class="sql-string">'New Mouse'</span>, <span class="sql-number">29.99</span>)
+<span class="sql-keyword">ON CONFLICT</span> (product_id) <span class="sql-keyword">DO UPDATE SET</span>
+  name = <span class="sql-keyword">EXCLUDED</span>.name, price = <span class="sql-keyword">EXCLUDED</span>.price;
+
+<span class="sql-comment">-- MySQL</span>
+<span class="sql-keyword">INSERT INTO</span> products (product_id, name, price)
+<span class="sql-keyword">VALUES</span> (<span class="sql-number">101</span>, <span class="sql-string">'New Mouse'</span>, <span class="sql-number">29.99</span>)
+<span class="sql-keyword">ON DUPLICATE KEY UPDATE</span> name = <span class="sql-keyword">VALUES</span>(name), price = <span class="sql-keyword">VALUES</span>(price);
+
+<span class="sql-comment">-- SQLite</span>
+<span class="sql-keyword">INSERT INTO</span> products (product_id, name, price) <span class="sql-keyword">VALUES</span> (<span class="sql-number">101</span>, <span class="sql-string">'New Mouse'</span>, <span class="sql-number">29.99</span>)
+<span class="sql-keyword">ON CONFLICT</span>(product_id) <span class="sql-keyword">DO UPDATE SET</span> name = <span class="sql-keyword">excluded</span>.name;</code></pre>
+          </div>
+
+          <!-- ========== 22 ========== -->
+          <div class="pat" id="p22">
+            <h2><span class="pat-num">22</span> Conditional aggregation</h2>
+            <p class="pat-tagline">Count/sum subsets in one pass.</p>
+            <div class="pat-when"><strong>When:</strong> KPI dashboards with breakdowns.</div>
+<pre><code><span class="sql-keyword">SELECT</span>
+  <span class="sql-fn">COUNT</span>(*) <span class="sql-keyword">AS</span> total_orders,
+  <span class="sql-fn">SUM</span>(<span class="sql-keyword">CASE WHEN</span> status = <span class="sql-string">'delivered'</span> <span class="sql-keyword">THEN</span> <span class="sql-number">1</span> <span class="sql-keyword">ELSE</span> <span class="sql-number">0</span> <span class="sql-keyword">END</span>) <span class="sql-keyword">AS</span> delivered_count,
+  <span class="sql-fn">SUM</span>(<span class="sql-keyword">CASE WHEN</span> status = <span class="sql-string">'delivered'</span> <span class="sql-keyword">THEN</span> total_amount <span class="sql-keyword">ELSE</span> <span class="sql-number">0</span> <span class="sql-keyword">END</span>) <span class="sql-keyword">AS</span> delivered_revenue,
+  <span class="sql-fn">AVG</span>(<span class="sql-keyword">CASE WHEN</span> total_amount &gt; <span class="sql-number">100</span> <span class="sql-keyword">THEN</span> total_amount <span class="sql-keyword">END</span>) <span class="sql-keyword">AS</span> avg_high_value
+<span class="sql-keyword">FROM</span> orders;</code></pre>
+          </div>
+
+          <!-- ========== 23 ========== -->
+          <div class="pat" id="p23">
+            <h2><span class="pat-num">23</span> String aggregation</h2>
+            <p class="pat-tagline">Concat all values in a group into one string.</p>
+            <div class="pat-when"><strong>When:</strong> reporting tags, comma-separated lists in outputs.</div>
+<pre><code><span class="sql-comment">-- PostgreSQL</span>
+<span class="sql-keyword">SELECT</span> customer_id,
+  <span class="sql-fn">STRING_AGG</span>(<span class="sql-fn">CAST</span>(order_id <span class="sql-keyword">AS TEXT</span>), <span class="sql-string">', '</span> <span class="sql-keyword">ORDER BY</span> order_date) <span class="sql-keyword">AS</span> all_orders
+<span class="sql-keyword">FROM</span> orders <span class="sql-keyword">GROUP BY</span> customer_id;
+
+<span class="sql-comment">-- MySQL</span>
+<span class="sql-keyword">SELECT</span> customer_id, <span class="sql-fn">GROUP_CONCAT</span>(order_id <span class="sql-keyword">ORDER BY</span> order_date <span class="sql-keyword">SEPARATOR</span> <span class="sql-string">', '</span>) <span class="sql-keyword">FROM</span> orders <span class="sql-keyword">GROUP BY</span> customer_id;
+
+<span class="sql-comment">-- SQLite</span>
+<span class="sql-keyword">SELECT</span> customer_id, <span class="sql-fn">GROUP_CONCAT</span>(order_id, <span class="sql-string">', '</span>) <span class="sql-keyword">FROM</span> orders <span class="sql-keyword">GROUP BY</span> customer_id;</code></pre>
+          </div>
+
+          <!-- ========== 24 ========== -->
+          <div class="pat" id="p24">
+            <h2><span class="pat-num">24</span> Difference from previous row (LAG)</h2>
+            <p class="pat-tagline">Compute deltas between consecutive rows.</p>
+            <div class="pat-when"><strong>When:</strong> price changes, sensor data deltas, time-series.</div>
+<pre><code><span class="sql-keyword">SELECT</span> order_date, total_amount,
+  <span class="sql-fn">LAG</span>(total_amount) <span class="sql-keyword">OVER</span> (<span class="sql-keyword">ORDER BY</span> order_date) <span class="sql-keyword">AS</span> prev,
+  total_amount - <span class="sql-fn">LAG</span>(total_amount) <span class="sql-keyword">OVER</span> (<span class="sql-keyword">ORDER BY</span> order_date) <span class="sql-keyword">AS</span> change
+<span class="sql-keyword">FROM</span> orders;</code></pre>
+          </div>
+
+          <!-- ========== 25 ========== -->
+          <div class="pat" id="p25">
+            <h2><span class="pat-num">25</span> Bulk insert from query</h2>
+            <p class="pat-tagline">Copy filtered rows into another table.</p>
+            <div class="pat-when"><strong>When:</strong> archiving, materializing reports, ETL.</div>
+<pre><code><span class="sql-comment">-- Insert filtered subset</span>
+<span class="sql-keyword">INSERT INTO</span> orders_archive (order_id, customer_id, order_date, total_amount)
+<span class="sql-keyword">SELECT</span> order_id, customer_id, order_date, total_amount
+<span class="sql-keyword">FROM</span> orders
+<span class="sql-keyword">WHERE</span> order_date &lt; <span class="sql-fn">CURRENT_DATE</span> - <span class="sql-keyword">INTERVAL</span> <span class="sql-string">'1 year'</span>;
+
+<span class="sql-comment">-- Create+populate in one step</span>
+<span class="sql-keyword">CREATE TABLE</span> top_customers <span class="sql-keyword">AS</span>
+<span class="sql-keyword">SELECT</span> customer_id, <span class="sql-fn">SUM</span>(total_amount) <span class="sql-keyword">AS</span> ltv
+<span class="sql-keyword">FROM</span> orders <span class="sql-keyword">GROUP BY</span> customer_id <span class="sql-keyword">HAVING</span> <span class="sql-fn">SUM</span>(total_amount) &gt; <span class="sql-number">1000</span>;</code></pre>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="container section">
+      <div class="card text-center" style="padding: 40px 32px;">
+        <h2 class="mb-4">Try these in the Playground</h2>
+        <p class="text-ink-300 mb-6">All 25 patterns run on the SQLSENSEI dataset. Copy any code block above into the Playground and hit Run.</p>
+        <div class="flex gap-3 justify-center" style="flex-wrap: wrap;">
+          <a href="playground.html" class="btn btn-primary">Open Playground →</a>
+          <a href="interview.html" class="btn btn-secondary">Interview prep</a>
+          <a href="cheatsheet.html" class="btn btn-ghost">Cheatsheet</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="flex items-center gap-3">
+        <span class="brand-mark" style="width: 24px; height: 24px; font-size: 0.6rem;">SQ</span>
+        <span class="mono text-sm">SQLSENSEI</span>
+      </div>
+      <div class="flex gap-4 text-sm">
+        <a href="mindmap.html">Mind Map</a>
+        <a href="chat.html">Chat</a>
+        <a href="playground.html">Playground</a>
+        <a href="interview.html">Interview</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/data/curriculum.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

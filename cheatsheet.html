@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SQL Cheatsheet · SQLSENSEI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2306b6d4'/%3E%3Ctext x='50' y='66' text-anchor='middle' font-family='monospace' font-size='52' font-weight='700' fill='%23000'%3ES%3C/text%3E%3C/svg%3E" />
+  <style>
+    .cs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 20px; }
+    .cs-card { background: var(--bg-1); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+    .cs-card h3 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--cyan-400); font-family: var(--font-mono); margin-bottom: 14px; }
+    .cs-card pre { font-size: 0.78rem; line-height: 1.55; padding: 12px 14px; border-radius: 8px; margin: 8px 0; }
+    .cs-card p { font-size: 0.85rem; color: var(--ink-300); margin: 8px 0; }
+    .cs-card ul { padding-left: 18px; font-size: 0.85rem; color: var(--ink-200); }
+    .cs-card ul li { margin-bottom: 4px; }
+    .cs-card code { font-size: 0.78rem; }
+    .dialect-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    .dialect-table th, .dialect-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line); }
+    .dialect-table th { color: var(--cyan-400); font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; background: var(--bg-2); }
+    .dialect-table code { font-size: 0.75rem; padding: 1px 6px; }
+    .cs-section-title { font-size: 1.5rem; margin: 56px 0 20px; padding-bottom: 12px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 12px; }
+    .cs-section-title .num { font-family: var(--font-mono); font-size: 0.9rem; color: var(--ink-500); }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-mark">SQ</span>
+        <span>SQL<span class="brand-suffix">SENSEI</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="mindmap.html">Mind Map</a></li>
+        <li><a href="curriculum.html">Curriculum</a></li>
+        <li><a href="chat.html">Chat</a></li>
+        <li><a href="playground.html">Playground</a></li>
+        <li><a href="interview.html">Interview</a></li>
+        <li><a href="patterns.html">Patterns</a></li>
+        <li><a href="cheatsheet.html" class="active">Cheatsheet</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <section class="container" style="padding: 56px 0 32px;">
+      <div class="badge badge-amber mb-4"><span class="badge-dot"></span>Single-page reference</div>
+      <h1 style="font-size: clamp(2rem, 4vw, 3rem);">The SQL Cheatsheet</h1>
+      <p class="text-ink-300 mt-4" style="max-width: 640px;">Everything you've learned, in one scrollable page. Bookmark it. Print it. Reference it during interviews.</p>
+    </section>
+
+    <section class="container">
+
+      <!-- ============================= -->
+      <h2 class="cs-section-title"><span class="num">01</span> Basics</h2>
+      <div class="cs-grid">
+        <div class="cs-card">
+          <h3>SELECT</h3>
+          <pre><code><span class="sql-keyword">SELECT</span> col1, col2
+<span class="sql-keyword">FROM</span> table_name;
+
+<span class="sql-comment">-- All columns</span>
+<span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> customers;
+
+<span class="sql-comment">-- Distinct values</span>
+<span class="sql-keyword">SELECT DISTINCT</span> city <span class="sql-keyword">FROM</span> customers;</code></pre>
+          <p>Always end statements with <code>;</code>. Prefer named columns over <code>*</code>.</p>
+        </div>
+
+        <div class="cs-card">
+          <h3>WHERE</h3>
+          <pre><code><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> products
+<span class="sql-keyword">WHERE</span> price &gt; <span class="sql-number">50</span>
+  <span class="sql-keyword">AND</span> category = <span class="sql-string">'Electronics'</span>;
+
+<span class="sql-comment">-- Operators</span>
+<span class="sql-keyword">=</span>  !=  &lt;  &gt;  &lt;=  &gt;=
+<span class="sql-keyword">AND  OR  NOT  IN  BETWEEN  LIKE  IS NULL</span></code></pre>
+          <p><code>LIKE</code> uses <code>%</code> (any chars) and <code>_</code> (single char).</p>
+        </div>
+
+        <div class="cs-card">
+          <h3>ORDER BY · LIMIT</h3>
+          <pre><code><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> customers
+<span class="sql-keyword">ORDER BY</span> age <span class="sql-keyword">DESC</span>, name <span class="sql-keyword">ASC</span>
+<span class="sql-keyword">LIMIT</span> <span class="sql-number">10</span> <span class="sql-keyword">OFFSET</span> <span class="sql-number">20</span>;</code></pre>
+          <p>Clause order is fixed: SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY → LIMIT.</p>
+        </div>
+
+        <div class="cs-card">
+          <h3>NULL handling</h3>
+          <pre><code><span class="sql-comment">-- Right way</span>
+<span class="sql-keyword">WHERE</span> manager_id <span class="sql-keyword">IS NULL</span>
+<span class="sql-keyword">WHERE</span> manager_id <span class="sql-keyword">IS NOT NULL</span>
+
+<span class="sql-comment">-- Replace NULL</span>
+<span class="sql-fn">COALESCE</span>(col, <span class="sql-string">'unknown'</span>)
+<span class="sql-fn">IFNULL</span>(col, <span class="sql-number">0</span>)</code></pre>
+          <p><code>= NULL</code> never works. Anything touching NULL becomes NULL.</p>
+        </div>
+      </div>
+
+      <!-- ============================= -->
+      <h2 class="cs-section-title"><span class="num">02</span> Aggregates &amp; grouping</h2>
+      <div class="cs-grid">
+        <div class="cs-card">
+          <h3>Aggregate functions</h3>
+          <pre><code><span class="sql-fn">COUNT</span>(*)         <span class="sql-comment">-- all rows</span>
+<span class="sql-fn">COUNT</span>(col)       <span class="sql-comment">-- non-NULL only</span>
+<span class="sql-fn">COUNT</span>(<span class="sql-keyword">DISTINCT</span> col)
+<span class="sql-fn">SUM</span>, <span class="sql-fn">AVG</span>, <span class="sql-fn">MIN</span>, <span class="sql-fn">MAX</span>
+<span class="sql-fn">ROUND</span>(<span class="sql-fn">AVG</span>(price), <span class="sql-number">2</span>)</code></pre>
+          <p>All aggregates ignore NULL except <code>COUNT(*)</code>.</p>
+        </div>
+
+        <div class="cs-card">
+          <h3>GROUP BY · HAVING</h3>
+          <pre><code><span class="sql-keyword">SELECT</span> customer_id, <span class="sql-fn">SUM</span>(total_amount) <span class="sql-keyword">AS</span> spent
+<span class="sql-keyword">FROM</span> orders
+<span class="sql-keyword">WHERE</span> status = <span class="sql-string">'delivered'</span>
+<span class="sql-keyword">GROUP BY</span> customer_id
+<span class="sql-keyword">HAVING</span> <span class="sql-fn">SUM</span>(total_amount) &gt; <span class="sql-number">100</span>
+<span class="sql-keyword">ORDER BY</span> spent <span class="sql-keyword">DESC</span>;</code></pre>
+          <p><code>WHERE</code> = filter rows. <code>HAVING</code> = filter groups (uses aggregates).</p>
+        </div>
+      </div>
+
+      <!-- ============================= -->
+      <h2 class="cs-section-title"><span class="num">03</span> Joins</h2>
+      <div class="cs-grid">
+        <div class="cs-card">
+          <h3>INNER JOIN</h3>
+          <pre><code><span class="sql-keyword">SELECT</span> c.name, o.order_id
+<span class="sql-keyword">FROM</span> customers c
+<span class="sql-keyword">INNER JOIN</span> orders o
+  <span class="sql-keyword">ON</span> c.customer_id = o.customer_id;</code></pre>
+          <p>Only rows that match in both tables.</p>
+        </div>
+
+        <div class="cs-card">
+          <h3>LEFT JOIN</h3>
+          <pre><code><span class="sql-keyword">SELECT</span> c.name, o.order_id
+<span class="sql-keyword">FROM</span> customers c
+<span class="sql-keyword">LEFT JOIN</span> orders o
+  <span class="sql-keyword">ON</span> c.customer_id = o.customer_id
+<span class="sql-keyword">WHERE</span> o.order_id <span class="sql-keyword">IS NULL</span>;  <span class="sql-comment">-- never ordered</span></code></pre>
+          <p>All left rows + matches; NULL fills the right side.</p>
+        </div>
+
+        <div class="cs-card">
+          <h3>Self-join</h3>
+          <pre><code><span class="sql-keyword">SELECT</span> e.name <span class="sql-keyword">AS</span> emp, m.name <span class="sql-keyword">AS</span> mgr
+<span class="sql-keyword">FROM</span> employees e
+<span class="sql-keyword">LEFT JOIN</span> employees m
+  <span class="sql-keyword">ON</span> e.manager_id = m.employee_id;</code></pre>
+          <p>Aliases mandatory. Great for hierarchies.</p>
+        </div>
+
+        <div class="cs-card">
+          <h3>CROSS JOIN (Cartesian)</h3>
+          <pre><code><span class="sql-keyword">SELECT</span> c.name, p.name
+<span class="sql-keyword">FROM</span> customers c
+<span class="sql-keyword">CROSS JOIN</span> products p;
+<span class="sql-comment">-- 8 × 8 = 64 rows</span></code></pre>
+          <p>Every combination. Explodes fast — be deliberate.</p>
+        </div>
+      </div>
+
+      <!-- ============================= -->
+      <h2 class="cs-section-title"><span class="num">04</span> Subqueries &amp; CTEs</h2>
+      <div class="cs-grid">
+        <div class="cs-card">
+          <h3>Subquery in WHERE</h3>
+          <pre><code><span class="sql-keyword">SELECT</span> name, price
+<span class="sql-keyword">FROM</span> products
+<span class="sql-keyword">WHERE</span> price &gt; (<span class="sql-keyword">SELECT</span> <span class="sql-fn">AVG</span>(price) <span class="sql-keyword">FROM</span> products);</code></pre>
+        </div>
+
+        <div class="cs-card">
+          <h3>EXISTS</h3>
+          <pre><code><span class="sql-keyword">SELECT</span> name <span class="sql-keyword">FROM</span> customers c
+<span class="sql-keyword">WHERE NOT EXISTS</span> (
+  <span class="sql-keyword">SELECT</span> <span class="sql-number">1</span> <span class="sql-keyword">FROM</span> orders o
+  <span class="sql-keyword">WHERE</span> o.customer_id = c.customer_id
+);</code></pre>
+          <p>Faster than <code>NOT IN</code> on large data.</p>
+        </div>
+
+        <div class="cs-card">
+          <h3>CTE (WITH)</h3>
+          <pre><code><span class="sql-keyword">WITH</span> top_spenders <span class="sql-keyword">AS</span> (
+  <span class="sql-keyword">SELECT</span> customer_id, <span class="sql-fn">SUM</span>(total_amount) <span class="sql-keyword">AS</span> total
+  <span class="sql-keyword">FROM</span> orders
+  <span class="sql-keyword">GROUP BY</span> customer_id
+  <span class="sql-keyword">HAVING</span> <span class="sql-fn">SUM</span>(total_amount) &gt; <span class="sql-number">100</span>
+)
+<span class="sql-keyword">SELECT</span> c.name, t.total
+<span class="sql-keyword">FROM</span> customers c
+<span class="sql-keyword">JOIN</span> top_spenders t <span class="sql-keyword">ON</span> c.customer_id = t.customer_id;</code></pre>
+          <p>Read top-down. Reusable, readable, debuggable.</p>
+        </div>
+
+        <div class="cs-card">
+          <h3>Recursive CTE</h3>
+          <pre><code><span class="sql-keyword">WITH RECURSIVE</span> nums <span class="sql-keyword">AS</span> (
+  <span class="sql-keyword">SELECT</span> <span class="sql-number">1</span> <span class="sql-keyword">AS</span> n
+  <span class="sql-keyword">UNION ALL</span>
+  <span class="sql-keyword">SELECT</span> n + <span class="sql-number">1</span> <span class="sql-keyword">FROM</span> nums <span class="sql-keyword">WHERE</span> n &lt; <span class="sql-number">10</span>
+)
+<span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> nums;</code></pre>
+          <p>For trees, graphs, sequences. Always include a termination condition.</p>
+        </div>
+      </div>
+
+      <!-- ============================= -->
+      <h2 class="cs-section-title"><span class="num">05</span> Window functions</h2>
+      <div class="cs-grid">
+        <div class="cs-card">
+          <h3>Ranking</h3>
+          <pre><code><span class="sql-fn">ROW_NUMBER</span>() <span class="sql-keyword">OVER</span> (
+  <span class="sql-keyword">PARTITION BY</span> category
+  <span class="sql-keyword">ORDER BY</span> price <span class="sql-keyword">DESC</span>
+) <span class="sql-keyword">AS</span> rn
+
+<span class="sql-fn">RANK</span>()       <span class="sql-comment">-- 1, 1, 3, 4</span>
+<span class="sql-fn">DENSE_RANK</span>() <span class="sql-comment">-- 1, 1, 2, 3</span>
+<span class="sql-fn">NTILE</span>(<span class="sql-number">4</span>)    <span class="sql-comment">-- quartiles</span></code></pre>
+        </div>
+
+        <div class="cs-card">
+          <h3>LAG / LEAD</h3>
+          <pre><code><span class="sql-fn">LAG</span>(total_amount) <span class="sql-keyword">OVER</span> (
+  <span class="sql-keyword">ORDER BY</span> order_date
+) <span class="sql-keyword">AS</span> previous_amount
+
+<span class="sql-fn">LEAD</span>(total_amount, <span class="sql-number">2</span>) <span class="sql-keyword">OVER</span> (...)
+<span class="sql-comment">-- second row ahead</span></code></pre>
+          <p>Boundary rows return NULL.</p>
+        </div>
+
+        <div class="cs-card">
+          <h3>Running totals</h3>
+          <pre><code><span class="sql-fn">SUM</span>(amount) <span class="sql-keyword">OVER</span> (
+  <span class="sql-keyword">ORDER BY</span> order_date
+) <span class="sql-keyword">AS</span> running_total
+
+<span class="sql-fn">AVG</span>(amount) <span class="sql-keyword">OVER</span> (
+  <span class="sql-keyword">ORDER BY</span> order_date
+  <span class="sql-keyword">ROWS BETWEEN</span> <span class="sql-number">2</span> <span class="sql-keyword">PRECEDING AND CURRENT ROW</span>
+) <span class="sql-keyword">AS</span> moving_avg_3</code></pre>
+        </div>
+
+        <div class="cs-card">
+          <h3>Window vs GROUP BY</h3>
+          <p><strong>GROUP BY</strong> collapses rows. <strong>Window</strong> adds a calculated column without collapsing.</p>
+          <pre><code><span class="sql-comment">-- Each product + average for its category</span>
+<span class="sql-keyword">SELECT</span> name, price, category,
+  <span class="sql-fn">AVG</span>(price) <span class="sql-keyword">OVER</span> (<span class="sql-keyword">PARTITION BY</span> category)
+<span class="sql-keyword">FROM</span> products;</code></pre>
+        </div>
+      </div>
+
+      <!-- ============================= -->
+      <h2 class="cs-section-title"><span class="num">06</span> Conditional &amp; sets</h2>
+      <div class="cs-grid">
+        <div class="cs-card">
+          <h3>CASE WHEN</h3>
+          <pre><code><span class="sql-keyword">SELECT</span> name, price,
+  <span class="sql-keyword">CASE</span>
+    <span class="sql-keyword">WHEN</span> price &lt; <span class="sql-number">25</span> <span class="sql-keyword">THEN</span> <span class="sql-string">'budget'</span>
+    <span class="sql-keyword">WHEN</span> price &lt; <span class="sql-number">75</span> <span class="sql-keyword">THEN</span> <span class="sql-string">'mid'</span>
+    <span class="sql-keyword">ELSE</span> <span class="sql-string">'premium'</span>
+  <span class="sql-keyword">END</span> <span class="sql-keyword">AS</span> tier
+<span class="sql-keyword">FROM</span> products;</code></pre>
+          <p>Conditional counting: <code>SUM(CASE WHEN cond THEN 1 ELSE 0 END)</code></p>
+        </div>
+
+        <div class="cs-card">
+          <h3>Set operators</h3>
+          <pre><code><span class="sql-keyword">SELECT</span> city <span class="sql-keyword">FROM</span> customers
+<span class="sql-keyword">UNION</span>       <span class="sql-comment">-- dedupe</span>
+<span class="sql-keyword">SELECT</span> city <span class="sql-keyword">FROM</span> suppliers;
+
+<span class="sql-keyword">UNION ALL</span>   <span class="sql-comment">-- keep duplicates (faster)</span>
+<span class="sql-keyword">INTERSECT</span>   <span class="sql-comment">-- in both</span>
+<span class="sql-keyword">EXCEPT</span>      <span class="sql-comment">-- in A not B (MINUS in Oracle)</span></code></pre>
+        </div>
+      </div>
+
+      <!-- ============================= -->
+      <h2 class="cs-section-title"><span class="num">07</span> String &amp; date functions</h2>
+      <div class="cs-grid">
+        <div class="cs-card">
+          <h3>Strings</h3>
+          <pre><code><span class="sql-fn">UPPER</span>(name)  <span class="sql-fn">LOWER</span>(name)
+<span class="sql-fn">LENGTH</span>(email)
+<span class="sql-fn">CONCAT</span>(a, b)  <span class="sql-comment">-- or  a || b</span>
+<span class="sql-fn">SUBSTRING</span>(name, <span class="sql-number">1</span>, <span class="sql-number">3</span>)
+<span class="sql-fn">TRIM</span>(col)  <span class="sql-fn">REPLACE</span>(col, old, new)
+col <span class="sql-keyword">LIKE</span> <span class="sql-string">'%@gmail.com'</span></code></pre>
+        </div>
+
+        <div class="cs-card">
+          <h3>Dates</h3>
+          <pre><code><span class="sql-fn">CURRENT_DATE</span>  <span class="sql-fn">NOW</span>()
+<span class="sql-fn">EXTRACT</span>(<span class="sql-keyword">YEAR FROM</span> signup_date)
+<span class="sql-fn">DATE_PART</span>(<span class="sql-string">'month'</span>, signup_date)
+<span class="sql-fn">DATEDIFF</span>(d1, d2)   <span class="sql-comment">-- MySQL</span>
+date1 - date2          <span class="sql-comment">-- Postgres</span>
+<span class="sql-fn">STRFTIME</span>(<span class="sql-string">'%Y'</span>, date)  <span class="sql-comment">-- SQLite</span></code></pre>
+        </div>
+
+        <div class="cs-card">
+          <h3>Math</h3>
+          <pre><code><span class="sql-fn">ROUND</span>(price, <span class="sql-number">2</span>)
+<span class="sql-fn">FLOOR</span>(x)  <span class="sql-fn">CEIL</span>(x)  <span class="sql-fn">ABS</span>(x)
+<span class="sql-fn">MOD</span>(a, b)   <span class="sql-comment">-- or  a % b</span>
+<span class="sql-fn">POWER</span>(x, <span class="sql-number">2</span>)  <span class="sql-fn">SQRT</span>(x)</code></pre>
+        </div>
+
+        <div class="cs-card">
+          <h3>Casting</h3>
+          <pre><code><span class="sql-fn">CAST</span>(col <span class="sql-keyword">AS</span> <span class="sql-keyword">INT</span>)
+<span class="sql-fn">CAST</span>(<span class="sql-string">'2024-01-15'</span> <span class="sql-keyword">AS DATE</span>)
+col<span class="sql-op">::</span><span class="sql-keyword">INT</span>            <span class="sql-comment">-- Postgres shorthand</span></code></pre>
+        </div>
+      </div>
+
+      <!-- ============================= -->
+      <h2 class="cs-section-title"><span class="num">08</span> Write &amp; DDL</h2>
+      <div class="cs-grid">
+        <div class="cs-card">
+          <h3>INSERT</h3>
+          <pre><code><span class="sql-keyword">INSERT INTO</span> customers (name, city, age)
+<span class="sql-keyword">VALUES</span>
+  (<span class="sql-string">'Maya Iqbal'</span>, <span class="sql-string">'Karachi'</span>, <span class="sql-number">30</span>),
+  (<span class="sql-string">'Ravi Patel'</span>, <span class="sql-string">'Mumbai'</span>, <span class="sql-number">42</span>);
+
+<span class="sql-comment">-- Insert from query</span>
+<span class="sql-keyword">INSERT INTO</span> archive
+<span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> orders <span class="sql-keyword">WHERE</span> status = <span class="sql-string">'cancelled'</span>;</code></pre>
+        </div>
+
+        <div class="cs-card">
+          <h3>UPDATE · DELETE</h3>
+          <pre><code><span class="sql-keyword">UPDATE</span> products
+<span class="sql-keyword">SET</span> price = price * <span class="sql-number">1.1</span>
+<span class="sql-keyword">WHERE</span> category = <span class="sql-string">'Electronics'</span>;
+
+<span class="sql-keyword">DELETE FROM</span> orders <span class="sql-keyword">WHERE</span> status = <span class="sql-string">'cancelled'</span>;</code></pre>
+          <p>⚠️ Always include WHERE — or risk wiping the whole table.</p>
+        </div>
+
+        <div class="cs-card">
+          <h3>CREATE TABLE</h3>
+          <pre><code><span class="sql-keyword">CREATE TABLE</span> orders (
+  order_id <span class="sql-keyword">INT PRIMARY KEY</span>,
+  customer_id <span class="sql-keyword">INT NOT NULL</span>,
+  order_date <span class="sql-keyword">DATE DEFAULT</span> <span class="sql-fn">CURRENT_DATE</span>,
+  total <span class="sql-keyword">DECIMAL</span>(<span class="sql-number">10</span>, <span class="sql-number">2</span>),
+  <span class="sql-keyword">FOREIGN KEY</span> (customer_id)
+    <span class="sql-keyword">REFERENCES</span> customers(customer_id)
+);</code></pre>
+        </div>
+
+        <div class="cs-card">
+          <h3>Index · View</h3>
+          <pre><code><span class="sql-keyword">CREATE INDEX</span> idx_orders_customer
+  <span class="sql-keyword">ON</span> orders(customer_id);
+
+<span class="sql-keyword">CREATE VIEW</span> top_customers <span class="sql-keyword">AS</span>
+<span class="sql-keyword">SELECT</span> customer_id, <span class="sql-fn">SUM</span>(total_amount) <span class="sql-keyword">AS</span> ltv
+<span class="sql-keyword">FROM</span> orders <span class="sql-keyword">GROUP BY</span> customer_id;</code></pre>
+        </div>
+      </div>
+
+      <!-- ============================= -->
+      <h2 class="cs-section-title"><span class="num">09</span> Transactions</h2>
+      <div class="cs-grid">
+        <div class="cs-card">
+          <h3>ACID transaction</h3>
+          <pre><code><span class="sql-keyword">BEGIN</span>;
+
+<span class="sql-keyword">UPDATE</span> accounts <span class="sql-keyword">SET</span> balance = balance - <span class="sql-number">100</span> <span class="sql-keyword">WHERE</span> id = <span class="sql-number">1</span>;
+<span class="sql-keyword">UPDATE</span> accounts <span class="sql-keyword">SET</span> balance = balance + <span class="sql-number">100</span> <span class="sql-keyword">WHERE</span> id = <span class="sql-number">2</span>;
+
+<span class="sql-comment">-- On error:</span>
+<span class="sql-keyword">ROLLBACK</span>;
+
+<span class="sql-comment">-- On success:</span>
+<span class="sql-keyword">COMMIT</span>;</code></pre>
+          <p><strong>A</strong>tomicity · <strong>C</strong>onsistency · <strong>I</strong>solation · <strong>D</strong>urability</p>
+        </div>
+
+        <div class="cs-card">
+          <h3>Isolation levels</h3>
+          <ul>
+            <li><strong>READ UNCOMMITTED</strong> — dirty reads possible</li>
+            <li><strong>READ COMMITTED</strong> — default in PG, no dirty reads</li>
+            <li><strong>REPEATABLE READ</strong> — default in MySQL, no phantom rows mostly</li>
+            <li><strong>SERIALIZABLE</strong> — strongest, slowest, full safety</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ============================= -->
+      <h2 class="cs-section-title"><span class="num">10</span> Dialect cheatsheet</h2>
+      <div class="cs-card" style="padding: 0; overflow-x: auto;">
+        <table class="dialect-table">
+          <thead>
+            <tr>
+              <th>Task</th>
+              <th>PostgreSQL</th>
+              <th>MySQL</th>
+              <th>SQLite</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>String concat</td>
+              <td><code>a || b</code> or <code>CONCAT(a, b)</code></td>
+              <td><code>CONCAT(a, b)</code> only</td>
+              <td><code>a || b</code></td>
+            </tr>
+            <tr>
+              <td>Limit + offset</td>
+              <td><code>LIMIT n OFFSET m</code></td>
+              <td><code>LIMIT m, n</code> or <code>LIMIT n OFFSET m</code></td>
+              <td><code>LIMIT n OFFSET m</code></td>
+            </tr>
+            <tr>
+              <td>Year from date</td>
+              <td><code>EXTRACT(YEAR FROM d)</code></td>
+              <td><code>YEAR(d)</code></td>
+              <td><code>strftime('%Y', d)</code></td>
+            </tr>
+            <tr>
+              <td>Date diff (days)</td>
+              <td><code>d1 - d2</code></td>
+              <td><code>DATEDIFF(d1, d2)</code></td>
+              <td><code>julianday(d1) - julianday(d2)</code></td>
+            </tr>
+            <tr>
+              <td>Current timestamp</td>
+              <td><code>NOW()</code></td>
+              <td><code>NOW()</code></td>
+              <td><code>datetime('now')</code></td>
+            </tr>
+            <tr>
+              <td>Auto-increment PK</td>
+              <td><code>SERIAL</code> / <code>GENERATED ALWAYS AS IDENTITY</code></td>
+              <td><code>AUTO_INCREMENT</code></td>
+              <td><code>INTEGER PRIMARY KEY AUTOINCREMENT</code></td>
+            </tr>
+            <tr>
+              <td>Upsert</td>
+              <td><code>INSERT ... ON CONFLICT (col) DO UPDATE</code></td>
+              <td><code>INSERT ... ON DUPLICATE KEY UPDATE</code></td>
+              <td><code>INSERT OR REPLACE</code> / <code>ON CONFLICT</code></td>
+            </tr>
+            <tr>
+              <td>FULL OUTER JOIN</td>
+              <td>✅ Supported</td>
+              <td>❌ Simulate with LEFT UNION RIGHT</td>
+              <td>✅ Since 3.39 (2022)</td>
+            </tr>
+            <tr>
+              <td>Boolean type</td>
+              <td><code>BOOLEAN</code></td>
+              <td><code>TINYINT(1)</code></td>
+              <td>None — use INT (0/1)</td>
+            </tr>
+            <tr>
+              <td>String length</td>
+              <td><code>LENGTH(s)</code> / <code>CHAR_LENGTH(s)</code></td>
+              <td><code>LENGTH(s)</code> bytes, <code>CHAR_LENGTH(s)</code> chars</td>
+              <td><code>LENGTH(s)</code></td>
+            </tr>
+            <tr>
+              <td>Random row</td>
+              <td><code>ORDER BY RANDOM() LIMIT 1</code></td>
+              <td><code>ORDER BY RAND() LIMIT 1</code></td>
+              <td><code>ORDER BY RANDOM() LIMIT 1</code></td>
+            </tr>
+            <tr>
+              <td>Regex match</td>
+              <td><code>col ~ 'pattern'</code></td>
+              <td><code>col REGEXP 'pattern'</code></td>
+              <td><code>col REGEXP 'pat'</code> (needs ext)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ============================= -->
+      <h2 class="cs-section-title"><span class="num">11</span> Performance</h2>
+      <div class="cs-grid">
+        <div class="cs-card">
+          <h3>EXPLAIN</h3>
+          <pre><code><span class="sql-keyword">EXPLAIN</span> <span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> orders <span class="sql-keyword">WHERE</span> customer_id = <span class="sql-number">12345</span>;
+
+<span class="sql-comment">-- With real timing:</span>
+<span class="sql-keyword">EXPLAIN ANALYZE</span> <span class="sql-keyword">SELECT</span> ...</code></pre>
+          <p>Look for <code>Seq Scan</code> on big tables = missing index.</p>
+        </div>
+
+        <div class="cs-card">
+          <h3>Top wins</h3>
+          <ul>
+            <li>Index columns used in WHERE, JOIN, ORDER BY</li>
+            <li>Avoid <code>SELECT *</code> — fetch only what you need</li>
+            <li>Filter early — push WHERE deep into subqueries</li>
+            <li><code>UNION ALL</code> instead of <code>UNION</code> when dedupe not needed</li>
+            <li>Use <code>EXISTS</code> instead of <code>IN</code> on large subqueries</li>
+            <li>Composite index <code>(a, b)</code> serves filters on <code>a</code> or <code>a AND b</code></li>
+          </ul>
+        </div>
+
+        <div class="cs-card">
+          <h3>Anti-patterns</h3>
+          <ul>
+            <li>❌ <code>WHERE UPPER(col) = 'X'</code> — kills index</li>
+            <li>❌ <code>WHERE col LIKE '%abc%'</code> — leading wildcard kills index</li>
+            <li>❌ Functions on indexed column in WHERE</li>
+            <li>❌ <code>OR</code> across different columns — often misses indexes</li>
+            <li>❌ Implicit type casting in JOIN keys</li>
+            <li>❌ N+1 queries — use a JOIN or batched IN</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="margin: 64px 0; text-align: center;">
+        <p class="text-ink-400 text-sm">📖 Bookmark this page · Ctrl+P to print as PDF</p>
+        <div class="flex gap-3 justify-center mt-4" style="flex-wrap: wrap;">
+          <a href="chat.html" class="btn btn-primary">Back to learning →</a>
+          <a href="interview.html" class="btn btn-secondary">Interview prep →</a>
+          <a href="playground.html" class="btn btn-ghost">Open Playground</a>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="flex items-center gap-3">
+        <span class="brand-mark" style="width: 24px; height: 24px; font-size: 0.6rem;">SQ</span>
+        <span class="mono text-sm">SQLSENSEI</span>
+      </div>
+      <div class="flex gap-4 text-sm">
+        <a href="mindmap.html">Mind Map</a>
+        <a href="chat.html">Chat</a>
+        <a href="playground.html">Playground</a>
+        <a href="interview.html">Interview</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast-stack" id="toastStack"></div>
+
+  <script src="assets/js/data/curriculum.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
