@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>SQL Practice Resources — Curated by SQLSENSEI</title>
+<style>
+  @page {
+    size: A4;
+    margin: 18mm 16mm;
+    @bottom-right {
+      content: "Page " counter(page) " of " counter(pages);
+      font-family: Inter, sans-serif;
+      font-size: 9pt;
+      color: #94a3b8;
+    }
+    @bottom-left {
+      content: "SQLSENSEI · github.com/Mani5266/sql";
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8pt;
+      color: #94a3b8;
+    }
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+    color: #0f172a;
+    line-height: 1.55;
+    font-size: 10.5pt;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    color: #0b0f17;
+  }
+
+  /* ============== COVER ============== */
+  .cover {
+    page-break-after: always;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: linear-gradient(180deg, #07090d 0%, #18223a 100%);
+    color: #f1f5f9;
+    padding: 30mm 16mm;
+    margin: -18mm -16mm;
+  }
+
+  .cover-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 60px;
+  }
+
+  .cover-mark {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #06b6d4, #f59e0b);
+    display: grid;
+    place-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 14pt;
+    color: #07090d;
+  }
+
+  .cover-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 18pt;
+    letter-spacing: -0.01em;
+  }
+
+  .cover-name span { color: #22d3ee; }
+
+  .cover h1 {
+    font-size: 38pt;
+    font-weight: 700;
+    line-height: 1.05;
+    color: #f1f5f9;
+    margin-bottom: 18px;
+    letter-spacing: -0.03em;
+  }
+
+  .cover .gradient {
+    background: linear-gradient(135deg, #22d3ee 0%, #fcd34d 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .cover .subtitle {
+    font-size: 14pt;
+    color: #cbd5e1;
+    max-width: 130mm;
+    margin-bottom: 40px;
+  }
+
+  .cover-meta {
+    display: flex;
+    gap: 30px;
+    margin-top: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9pt;
+    color: #94a3b8;
+    border-top: 1px solid rgba(148, 163, 184, 0.2);
+    padding-top: 16px;
+  }
+
+  .cover-meta strong { color: #22d3ee; }
+
+  .cover-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin: 30px 0;
+  }
+
+  .cover-stat {
+    background: rgba(34, 211, 238, 0.06);
+    border: 1px solid rgba(34, 211, 238, 0.2);
+    border-radius: 8px;
+    padding: 14px;
+  }
+
+  .cover-stat-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22pt;
+    font-weight: 700;
+    color: #22d3ee;
+    line-height: 1;
+  }
+
+  .cover-stat-label {
+    font-size: 9pt;
+    color: #cbd5e1;
+    margin-top: 6px;
+  }
+
+  /* ============== HEADINGS ============== */
+  h1.section-title {
+    font-size: 22pt;
+    color: #0b0f17;
+    margin: 0 0 12px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid #06b6d4;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  h1.section-title .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14pt;
+    color: #06b6d4;
+  }
+
+  .section-lead {
+    color: #475569;
+    margin-bottom: 20px;
+    font-size: 11pt;
+  }
+
+  h2 {
+    font-size: 15pt;
+    margin: 24px 0 12px;
+    color: #0b0f17;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ============== RESOURCE CARDS ============== */
+  .resource {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #06b6d4;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    page-break-inside: avoid;
+  }
+
+  .resource.tier-1 { border-left-color: #f59e0b; }
+  .resource.tier-2 { border-left-color: #06b6d4; }
+  .resource.tier-3 { border-left-color: #94a3b8; }
+
+  .resource-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 6px;
+    gap: 12px;
+  }
+
+  .resource-name {
+    font-weight: 700;
+    font-size: 12pt;
+    color: #0b0f17;
+  }
+
+  .resource-name a {
+    color: #0b0f17;
+    text-decoration: none;
+  }
+
+  .resource-url {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8.5pt;
+    color: #0891b2;
+    word-break: break-all;
+  }
+
+  .resource-meta {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin: 6px 0 8px;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.5pt;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .tag-free { background: #d1fae5; color: #065f46; }
+  .tag-paid { background: #fef3c7; color: #92400e; }
+  .tag-freemium { background: #dbeafe; color: #1e40af; }
+  .tag-difficulty { background: #f3e8ff; color: #6b21a8; }
+  .tag-best { background: #fee2e2; color: #991b1b; }
+  .tag-company { background: #e0f2fe; color: #075985; }
+
+  .resource-desc {
+    color: #334155;
+    font-size: 10pt;
+    margin: 6px 0;
+  }
+
+  .resource-why {
+    color: #475569;
+    font-size: 9.5pt;
+    font-style: italic;
+    margin-top: 6px;
+    padding: 6px 10px;
+    background: rgba(6, 182, 212, 0.05);
+    border-left: 2px solid #06b6d4;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .resource-why strong { color: #0891b2; font-style: normal; }
+
+  /* ============== ROADMAP ============== */
+  .roadmap {
+    background: linear-gradient(135deg, #fef3c7 0%, #fee2e2 100%);
+    border: 1px solid #fbbf24;
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin: 20px 0 30px;
+    page-break-inside: avoid;
+  }
+
+  .roadmap h2 {
+    color: #92400e;
+    margin: 0 0 12px;
+    font-size: 14pt;
+  }
+
+  .roadmap-step {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+
+  .roadmap-num {
+    background: #f59e0b;
+    color: white;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 11pt;
+    flex-shrink: 0;
+  }
+
+  .roadmap-content {
+    flex: 1;
+    padding-top: 2px;
+  }
+
+  .roadmap-title {
+    font-weight: 700;
+    color: #7c2d12;
+    margin-bottom: 2px;
+  }
+
+  .roadmap-desc {
+    font-size: 9.5pt;
+    color: #78350f;
+  }
+
+  /* ============== TABLES ============== */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 9pt;
+    page-break-inside: avoid;
+  }
+
+  .compare-table th, .compare-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: left;
+  }
+
+  .compare-table th {
+    background: #f1f5f9;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #475569;
+    font-weight: 600;
+  }
+
+  .compare-table tr:hover { background: #f8fafc; }
+
+  /* ============== TIPS ============== */
+  .tip-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 18px 0;
+  }
+
+  .tip-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 14px;
+    page-break-inside: avoid;
+  }
+
+  .tip-card h3 {
+    font-size: 10pt;
+    color: #0891b2;
+    margin-bottom: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .tip-card ul {
+    padding-left: 16px;
+    font-size: 9.5pt;
+    color: #334155;
+  }
+
+  .tip-card li { margin-bottom: 3px; }
+
+  /* ============== HONEST RECOMMENDATION ============== */
+  .honest {
+    background: linear-gradient(135deg, #0c4a6e 0%, #075985 100%);
+    color: #f0f9ff;
+    border-radius: 12px;
+    padding: 22px 26px;
+    margin: 24px 0;
+    page-break-inside: avoid;
+  }
+
+  .honest h2 {
+    color: #fcd34d;
+    margin: 0 0 10px;
+    font-size: 15pt;
+  }
+
+  .honest p {
+    color: #e0f2fe;
+    margin: 6px 0;
+    font-size: 10.5pt;
+  }
+
+  .honest strong { color: #fcd34d; }
+
+  /* ============== FOOTER ============== */
+  .closing {
+    page-break-before: always;
+    text-align: center;
+    padding: 60px 20px;
+  }
+
+  .closing h1 {
+    font-size: 24pt;
+    margin-bottom: 14px;
+  }
+
+  .closing p {
+    color: #475569;
+    margin: 8px 0;
+  }
+
+  .closing-cta {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 10px 22px;
+    background: #06b6d4;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  a { color: #0891b2; text-decoration: none; }
+
+  ul.clean { list-style: none; padding: 0; }
+  ul.clean li { padding-left: 18px; position: relative; margin-bottom: 4px; font-size: 10pt; color: #334155; }
+  ul.clean li::before { content: '▸'; position: absolute; left: 0; color: #06b6d4; font-weight: 700; }
+</style>
+</head>
+<body>
+
+  <!-- ============== COVER PAGE ============== -->
+  <div class="cover">
+    <div class="cover-brand">
+      <div class="cover-mark">SQ</div>
+      <div class="cover-name">SQL<span>SENSEI</span></div>
+    </div>
+
+    <h1>SQL Practice<br/><span class="gradient">Resource Guide</span></h1>
+
+    <p class="subtitle">
+      The complete, ranked list of where to actually practice SQL — from beginner to FAANG-ready.
+      No fluff, just the platforms that work.
+    </p>
+
+    <div class="cover-stats">
+      <div class="cover-stat">
+        <div class="cover-stat-num">15+</div>
+        <div class="cover-stat-label">Practice platforms</div>
+      </div>
+      <div class="cover-stat">
+        <div class="cover-stat-num">8</div>
+        <div class="cover-stat-label">Categories</div>
+      </div>
+      <div class="cover-stat">
+        <div class="cover-stat-num">100%</div>
+        <div class="cover-stat-label">Verified resources</div>
+      </div>
+      <div class="cover-stat">
+        <div class="cover-stat-num">1</div>
+        <div class="cover-stat-label">Honest roadmap</div>
+      </div>
+    </div>
+
+    <div class="cover-meta">
+      <div><strong>v1.0</strong> · Curated for SQLSENSEI students</div>
+      <div>github.com/Mani5266/sql</div>
+    </div>
+  </div>
+
+  <!-- ============== INTRO / ROADMAP ============== -->
+  <h1 class="section-title"><span class="num">01</span> The Honest Roadmap</h1>
+  <p class="section-lead">Don't grind every site. Follow this exact sequence and you'll be interview-ready in 4-6 weeks.</p>
+
+  <div class="roadmap">
+    <h2>📍 The path that actually works</h2>
+
+    <div class="roadmap-step">
+      <div class="roadmap-num">1</div>
+      <div class="roadmap-content">
+        <div class="roadmap-title">Finish SQLSENSEI Levels 1-3 first</div>
+        <div class="roadmap-desc">Get the fundamentals locked in (SELECT, JOIN, GROUP BY, subqueries). Don't skip the exercises.</div>
+      </div>
+    </div>
+
+    <div class="roadmap-step">
+      <div class="roadmap-num">2</div>
+      <div class="roadmap-content">
+        <div class="roadmap-title">Grind LeetCode SQL Easy → Medium (~50 problems)</div>
+        <div class="roadmap-desc">This builds the muscle memory. Aim for 2-3 problems/day for 3-4 weeks.</div>
+      </div>
+    </div>
+
+    <div class="roadmap-step">
+      <div class="roadmap-num">3</div>
+      <div class="roadmap-content">
+        <div class="roadmap-title">Switch to DataLemur / StrataScratch for company-tagged questions</div>
+        <div class="roadmap-desc">Filter by your target company for the last 2-3 weeks before interviews. Real questions, real format.</div>
+      </div>
+    </div>
+
+    <div class="roadmap-step">
+      <div class="roadmap-num">4</div>
+      <div class="roadmap-content">
+        <div class="roadmap-title">Do the 8 Week SQL Challenge (optional but powerful)</div>
+        <div class="roadmap-desc">If you want to feel what real analytics work looks like. Builds confidence and portfolio.</div>
+      </div>
+    </div>
+
+    <div class="roadmap-step">
+      <div class="roadmap-num">5</div>
+      <div class="roadmap-content">
+        <div class="roadmap-title">Mock interview on Pramp before the real thing</div>
+        <div class="roadmap-desc">Free peer-to-peer mock interviews. Talking through SQL out loud is a separate skill.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== TIER 1: BEST OVERALL ============== -->
+  <h1 class="section-title" style="page-break-before: always;"><span class="num">02</span> Tier 1 — Start Here</h1>
+  <p class="section-lead">These three sites cover 80% of what you need. If you only use these three, you'll be fine.</p>
+
+  <div class="resource tier-1">
+    <div class="resource-head">
+      <div class="resource-name">LeetCode SQL</div>
+      <div class="resource-url">leetcode.com/problemset/database/</div>
+    </div>
+    <div class="resource-meta">
+      <span class="tag tag-freemium">FREEMIUM</span>
+      <span class="tag tag-best">★ BEST OVERALL</span>
+      <span class="tag tag-difficulty">EASY → HARD</span>
+      <span class="tag tag-company">FAANG</span>
+    </div>
+    <div class="resource-desc">250+ SQL problems tagged by difficulty. The de facto standard for SQL interview prep. Discussion forums for every problem.</div>
+    <div class="resource-why"><strong>Why:</strong> Every FAANG interviewer has seen these problems. Solving the Top 50 SQL list essentially guarantees you've seen the pattern before in your interview.</div>
+  </div>
+
+  <div class="resource tier-1">
+    <div class="resource-head">
+      <div class="resource-name">DataLemur</div>
+      <div class="resource-url">datalemur.com</div>
+    </div>
+    <div class="resource-meta">
+      <span class="tag tag-freemium">FREEMIUM</span>
+      <span class="tag tag-best">★ BEST FOR FAANG DS</span>
+      <span class="tag tag-company">META · AMAZON · NETFLIX</span>
+    </div>
+    <div class="resource-desc">Made by an ex-Meta data scientist. Real interview questions from Meta, Amazon, Netflix, etc. Clean UI, focused purely on SQL for data roles.</div>
+    <div class="resource-why"><strong>Why:</strong> The free questions are higher quality than most paid platforms. Specifically targets data science / analytics SQL rounds.</div>
+  </div>
+
+  <div class="resource tier-1">
+    <div class="resource-head">
+      <div class="resource-name">StrataScratch</div>
+      <div class="resource-url">stratascratch.com</div>
+    </div>
+    <div class="resource-meta">
+      <span class="tag tag-freemium">FREEMIUM</span>
+      <span class="tag tag-best">★ MOST COMPANIES</span>
+      <span class="tag tag-company">50+ COMPANIES</span>
+    </div>
+    <div class="resource-desc">Real questions from 50+ companies with company tags, difficulty filters, and detailed solutions. Strong free tier.</div>
+    <div class="resource-why"><strong>Why:</strong> Widest variety of company-specific questions. If you're targeting a less common company (Uber, Airbnb, Stripe), this beats LeetCode.</div>
+  </div>
+
+  <!-- ============== TIER 2: FUNDAMENTALS ============== -->
+  <h1 class="section-title" style="page-break-before: always;"><span class="num">03</span> For Fundamentals (Beginners)</h1>
+  <p class="section-lead">If you're still learning basics — use these alongside SQLSENSEI Levels 1-2.</p>
+
+  <div class="resource tier-2">
+    <div class="resource-head">
+      <div class="resource-name">SQLZoo</div>
+      <div class="resource-url">sqlzoo.net</div>
+    </div>
+    <div class="resource-meta">
+      <span class="tag tag-free">FREE</span>
+      <span class="tag tag-difficulty">BEGINNER</span>
+    </div>
+    <div class="resource-desc">Interactive lessons, no signup. Goes from SELECT to window functions step by step.</div>
+    <div class="resource-why"><strong>When:</strong> Perfect right after SQLSENSEI Level 1-2 to reinforce basics with different practice problems.</div>
+  </div>
+
+  <div class="resource tier-2">
+    <div class="resource-head">
+      <div class="resource-name">Mode SQL Tutorial</div>
+      <div class="resource-url">mode.com/sql-tutorial/</div>
+    </div>
+    <div class="resource-meta">
+      <span class="tag tag-free">FREE</span>
+      <span class="tag tag-difficulty">BEGINNER → INTERMEDIATE</span>
+    </div>
+    <div class="resource-desc">Well-written tutorials using realistic startup datasets. Best free SQL course on the internet for quality of writing.</div>
+    <div class="resource-why"><strong>Why:</strong> Teaches SQL the way analysts actually use it, not the way textbooks do.</div>
+  </div>
+
+  <div class="resource tier-2">
+    <div class="resource-head">
+      <div class="resource-name">SQLBolt</div>
+      <div class="resource-url">sqlbolt.com</div>
+    </div>
+    <div class="resource-meta">
+      <span class="tag tag-free">FREE</span>
+      <span class="tag tag-difficulty">ABSOLUTE BEGINNER</span>
+    </div>
+    <div class="resource-desc">Bite-size interactive lessons, very gentle. Great if you're completely new and SQLZoo feels too fast.</div>
+    <div class="resource-why"><strong>When:</strong> Day 1-3 of your SQL journey. Read a chapter, do the exercises, done.</div>
+  </div>
+
+  <div class="resource tier-2">
+    <div class="resource-head">
+      <div class="resource-name">W3Schools SQL Tutorial</div>
+      <div class="resource-url">w3schools.com/sql/</div>
+    </div>
+    <div class="resource-meta">
+      <span class="tag tag-free">FREE</span>
+      <span class="tag tag-difficulty">REFERENCE</span>
+    </div>
+    <div class="resource-desc">Syntax reference with "Try it yourself" sandboxes. Not a course, but a useful lookup for syntax.</div>
+    <div class="resource-why"><strong>When:</strong> Use it like a dictionary, not a learning path.</div>
+  </div>
+
+  <!-- ============== TIER 3: PATTERN GRINDING ============== -->
+  <h1 class="section-title" style="page-break-before: always;"><span class="num">04</span> For Pattern Grinding</h1>
+  <p class="section-lead">Once you've done basics — drill patterns until they're muscle memory.</p>
+
+  <div class="resource tier-2">
+    <div class="resource-head">
+      <div class="resource-name">HackerRank SQL</div>
+      <div class="resource-url">hackerrank.com/domains/sql</div>
+    </div>
+    <div class="resource-meta">
+      <span class="tag tag-free">FREE</span>
+      <span class="tag tag-difficulty">EASY → HARD</span>
+    </div>
+    <div class="resource-desc">Tracks for Basic Select, Advanced Select, Aggregations, Basic Join, Advanced Join. Less interview-y than LeetCode but more structured.</div>
+    <div class="resource-why"><strong>When:</strong> If LeetCode feels overwhelming, HackerRank's tracks are friendlier organization.</div>
+  </div>
+
+  <div class="resource tier-2">
+    <div class="resource-head">
+      <div class="resource-name">Codewars SQL</div>
+      <div class="resource-url">codewars.com (filter by SQL)</div>
+    </div>
+    <div class="resource-meta">
+      <span class="tag tag-free">FREE</span>
+      <span class="tag tag-difficulty">VARIED</span>
+    </div>
+    <div class="resource-desc">Community-submitted SQL "katas" ranked by difficulty (kyu/dan). Strong on creative problems you won't see elsewhere.</div>
+    <div class="resource-why"><strong>When:</strong> When you want unusual problems to push out of your comfort zone.</div>
+  </div>
+
+  <div class="resource tier-2">
+    <div class="resource-head">
+      <div class="resource-name">PgExercises</div>
+      <div class="resource-url">pgexercises.com</div>
+    </div>
+    <div class="resource-meta">
+      <span class="tag tag-free">FREE</span>
+      <span class="tag tag-difficulty">INTERMEDIATE</span>
+      <span class="tag tag-company">POSTGRESQL FOCUS</span>
+    </div>
+    <div class="resource-desc">PostgreSQL-specific exercises on a country club booking dataset. Covers joins, dates, recursion, aggregations.</div>
+    <div class="resource-why"><strong>When:</strong> If you're targeting a Postgres-heavy job (most startups).</div>
+  </div>
+
+  <!-- ============== TIER 4: REAL WORLD ============== -->
+  <h1 class="section-title" style="page-break-before: always;"><span class="num">05</span> Real-World / Messy Data</h1>
+  <p class="section-lead">Practice on actual business datasets, not toy problems.</p>
+
+  <div class="resource tier-2">
+    <div class="resource-head">
+      <div class="resource-name">8 Week SQL Challenge</div>
+      <div class="resource-url">8weeksqlchallenge.com</div>
+    </div>
+    <div class="resource-meta">
+      <span class="tag tag-free">FREE</span>
+      <span class="tag tag-best">★ BEST FOR PORTFOLIO</span>
+      <span class="tag tag-difficulty">INTERMEDIATE → HARD</span>
+    </div>
+    <div class="resource-desc">8 case studies on real business datasets (Pizza Runner, Danny's Diner, Data Mart, etc). Each one is a mini analytics project.</div>
+    <div class="resource-why"><strong>Why:</strong> The closest you can get to real analyst work without a job. Great GitHub portfolio material.</div>
+  </div>
+
+  <div class="resource tier-2">
+    <div class="resource-head">
+      <div class="resource-name">Kaggle SQL Scavenger Hunt</div>
+      <div class="resource-url">kaggle.com/learn/intro-to-sql</div>
+    </div>
+    <div class="resource-meta">
+      <span class="tag tag-free">FREE</span>
+      <span class="tag tag-company">BIGQUERY</span>
+    </div>
+    <div class="resource-desc">Practice on Kaggle's free BigQuery datasets — Stack Overflow, Hacker News, Reddit, GitHub commits. Real data, real scale.</div>
+    <div class="resource-why"><strong>Why:</strong> Practice on tables with millions of rows. Forces you to think about efficiency.</div>
+  </div>
+
+  <div class="resource tier-2">
+    <div class="resource-head">
+      <div class="resource-name">Advent of SQL</div>
+      <div class="resource-url">adventofsql.com</div>
+    </div>
+    <div class="resource-meta">
+      <span class="tag tag-free">FREE</span>
+      <span class="tag tag-difficulty">ESCALATING</span>
+    </div>
+    <div class="resource-desc">Yearly puzzle event in December. One SQL puzzle per day for 25 days, getting progressively harder.</div>
+    <div class="resource-why"><strong>When:</strong> December — great way to keep your skills sharp with a community.</div>
+  </div>
+
+  <div class="resource tier-2">
+    <div class="resource-head">
+      <div class="resource-name">Select Star SQL</div>
+      <div class="resource-url">selectstarsql.com</div>
+    </div>
+    <div class="resource-meta">
+      <span class="tag tag-free">FREE</span>
+      <span class="tag tag-difficulty">INTERMEDIATE</span>
+    </div>
+    <div class="resource-desc">Free interactive book using death-row inmate data (Texas execution records). Unconventional but memorable.</div>
+    <div class="resource-why"><strong>When:</strong> If you learn better through storytelling than abstract problems.</div>
+  </div>
+
+  <!-- ============== TIER 5: INTERVIEW SPECIFIC ============== -->
+  <h1 class="section-title" style="page-break-before: always;"><span class="num">06</span> Interview-Specific Platforms</h1>
+  <p class="section-lead">Mock interviews, live coding, and structured prep paths.</p>
+
+  <div class="resource tier-2">
+    <div class="resource-head">
+      <div class="resource-name">InterviewQuery</div>
+      <div class="resource-url">interviewquery.com</div>
+    </div>
+    <div class="resource-meta">
+      <span class="tag tag-freemium">FREEMIUM</span>
+      <span class="tag tag-company">DATA SCIENCE FOCUSED</span>
+    </div>
+    <div class="resource-desc">SQL + Python + statistics + product sense for data science interviews. Strong company-tagged question bank.</div>
+    <div class="resource-why"><strong>When:</strong> If you're targeting data science / analytics roles specifically (not data engineering).</div>
+  </div>
+
+  <div class="resource tier-2">
+    <div class="resource-head">
+      <div class="resource-name">Pramp</div>
+      <div class="resource-url">pramp.com</div>
+    </div>
+    <div class="resource-meta">
+      <span class="tag tag-free">FREE</span>
+      <span class="tag tag-best">★ MOCK INTERVIEWS</span>
+    </div>
+    <div class="resource-desc">Free peer-to-peer mock interviews. Live video, shared code editor, you alternate being interviewer and interviewee.</div>
+    <div class="resource-why"><strong>Why:</strong> Coding SQL alone is 10x easier than coding it while someone watches and asks follow-ups. This bridges the gap.</div>
+  </div>
+
+  <div class="resource tier-2">
+    <div class="resource-head">
+      <div class="resource-name">Exercism SQL Track</div>
+      <div class="resource-url">exercism.org/tracks/sqlite</div>
+    </div>
+    <div class="resource-meta">
+      <span class="tag tag-free">FREE</span>
+      <span class="tag tag-difficulty">VARIED</span>
+    </div>
+    <div class="resource-desc">SQLite track with a mentor system — real humans review your solutions and suggest improvements.</div>
+    <div class="resource-why"><strong>Why:</strong> Free human feedback on your queries is rare and valuable.</div>
+  </div>
+
+  <!-- ============== COMPARISON TABLE ============== -->
+  <h1 class="section-title" style="page-break-before: always;"><span class="num">07</span> Quick Comparison</h1>
+  <p class="section-lead">If you're going to pick just one for this week, here's the matrix.</p>
+
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Platform</th>
+        <th>Best For</th>
+        <th>Cost</th>
+        <th>Difficulty</th>
+        <th>Company Tags</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>LeetCode</strong></td><td>Interview prep, FAANG</td><td>Freemium</td><td>Easy → Hard</td><td>✓ Premium</td></tr>
+      <tr><td><strong>DataLemur</strong></td><td>FAANG data science</td><td>Freemium</td><td>Easy → Hard</td><td>✓ Free</td></tr>
+      <tr><td><strong>StrataScratch</strong></td><td>Most companies covered</td><td>Freemium</td><td>Easy → Hard</td><td>✓ Free</td></tr>
+      <tr><td><strong>HackerRank</strong></td><td>Structured tracks</td><td>Free</td><td>Easy → Hard</td><td>—</td></tr>
+      <tr><td><strong>SQLZoo</strong></td><td>Beginner fundamentals</td><td>Free</td><td>Easy → Medium</td><td>—</td></tr>
+      <tr><td><strong>Mode Tutorial</strong></td><td>Quality teaching</td><td>Free</td><td>Easy → Medium</td><td>—</td></tr>
+      <tr><td><strong>SQLBolt</strong></td><td>Day 1 of SQL</td><td>Free</td><td>Easy</td><td>—</td></tr>
+      <tr><td><strong>8 Week SQL</strong></td><td>Real-world projects</td><td>Free</td><td>Medium → Hard</td><td>—</td></tr>
+      <tr><td><strong>Kaggle</strong></td><td>Big data, BigQuery</td><td>Free</td><td>Medium</td><td>—</td></tr>
+      <tr><td><strong>PgExercises</strong></td><td>PostgreSQL deep dive</td><td>Free</td><td>Medium → Hard</td><td>—</td></tr>
+      <tr><td><strong>Codewars</strong></td><td>Creative puzzles</td><td>Free</td><td>Varied</td><td>—</td></tr>
+      <tr><td><strong>Advent of SQL</strong></td><td>December grind</td><td>Free</td><td>Easy → Hard</td><td>—</td></tr>
+      <tr><td><strong>InterviewQuery</strong></td><td>DS interviews</td><td>Freemium</td><td>Medium → Hard</td><td>✓</td></tr>
+      <tr><td><strong>Pramp</strong></td><td>Mock interviews</td><td>Free</td><td>Real format</td><td>—</td></tr>
+      <tr><td><strong>Exercism</strong></td><td>Human feedback</td><td>Free</td><td>Easy → Hard</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============== HONEST RECOMMENDATION ============== -->
+  <div class="honest">
+    <h2>🎯 The Honest Recommendation</h2>
+    <p>Skip 90% of these. More platforms ≠ more skill. Here's exactly what to do:</p>
+    <p><strong>Week 1-2:</strong> Finish SQLSENSEI Levels 1-3.</p>
+    <p><strong>Week 3-5:</strong> LeetCode SQL — 50 Easy + 30 Medium problems. That's it.</p>
+    <p><strong>Week 6 (pre-interview):</strong> DataLemur, filter by your target company. Do 15-20 questions.</p>
+    <p><strong>Week 7+:</strong> Pramp for 2-3 mock interviews. Talk through your SQL out loud.</p>
+    <p style="margin-top: 14px;"><strong>Don't:</strong> Bounce between platforms thinking variety = mastery. Pick one, finish it, then move on.</p>
+  </div>
+
+  <!-- ============== PRO TIPS ============== -->
+  <h1 class="section-title" style="page-break-before: always;"><span class="num">08</span> Pro Tips for Practice</h1>
+
+  <div class="tip-grid">
+    <div class="tip-card">
+      <h3>⚡ The 80/20 of SQL</h3>
+      <ul>
+        <li>JOINs — in 90% of questions</li>
+        <li>GROUP BY + aggregates</li>
+        <li>Window functions (RANK, ROW_NUMBER, LAG)</li>
+        <li>NULL behavior (#1 gotcha)</li>
+        <li>Top-N per group</li>
+      </ul>
+    </div>
+
+    <div class="tip-card">
+      <h3>🎤 How to answer in interviews</h3>
+      <ul>
+        <li>Restate the question in your words</li>
+        <li>Ask about NULLs, ties, edge cases</li>
+        <li>Talk through approach before coding</li>
+        <li>Mention alternatives (CTE vs subquery)</li>
+        <li>Discuss performance + indexes</li>
+      </ul>
+    </div>
+
+    <div class="tip-card">
+      <h3>🛠 Practice routine</h3>
+      <ul>
+        <li>2-3 problems per day, not 10</li>
+        <li>30 min max per problem — then peek</li>
+        <li>Type queries by hand, no copy-paste</li>
+        <li>Re-solve hard ones 1 week later</li>
+        <li>Write a one-line comment explaining the trick</li>
+      </ul>
+    </div>
+
+    <div class="tip-card">
+      <h3>⚠️ Mistakes that fail interviews</h3>
+      <ul>
+        <li>Jumping to code without clarifying</li>
+        <li>Using <code>= NULL</code> not <code>IS NULL</code></li>
+        <li>WHERE with aggregates (use HAVING)</li>
+        <li>Confusing RANK / ROW_NUMBER / DENSE_RANK</li>
+        <li>Silence — talk through your thinking</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ============== TOP 10 TO BOOKMARK ============== -->
+  <h2 style="margin-top: 30px; color: #0891b2;">📌 Top 10 to bookmark right now</h2>
+  <ul class="clean">
+    <li><strong>leetcode.com/problemset/database/</strong> — The interview standard</li>
+    <li><strong>datalemur.com</strong> — FAANG data science questions, free tier</li>
+    <li><strong>stratascratch.com</strong> — Most companies covered</li>
+    <li><strong>sqlzoo.net</strong> — Beginner-friendly interactive</li>
+    <li><strong>mode.com/sql-tutorial/</strong> — Best free SQL course</li>
+    <li><strong>8weeksqlchallenge.com</strong> — Real-world case studies</li>
+    <li><strong>pgexercises.com</strong> — Postgres-specific drill</li>
+    <li><strong>pramp.com</strong> — Free mock interviews</li>
+    <li><strong>kaggle.com/learn/intro-to-sql</strong> — BigQuery + big data</li>
+    <li><strong>github.com/Mani5266/sql</strong> — SQLSENSEI (you're here 🥋)</li>
+  </ul>
+
+  <!-- ============== CLOSING ============== -->
+  <div class="closing">
+    <h1 class="gradient" style="background: linear-gradient(135deg, #06b6d4, #f59e0b); -webkit-background-clip: text; background-clip: text; color: transparent;">Go practice.</h1>
+    <p>You don't need 15 platforms. You need 3, and consistency.</p>
+    <p>Open LeetCode. Pick an Easy. Solve it. Tomorrow, pick another.</p>
+    <p>4 weeks of that and you'll surprise yourself.</p>
+    <a href="https://github.com/Mani5266/sql" class="closing-cta">github.com/Mani5266/sql</a>
+    <p style="margin-top: 30px; font-size: 9pt; color: #94a3b8; font-family: 'JetBrains Mono', monospace;">SQLSENSEI · Patient. Precise. Practical.</p>
+  </div>
+
+</body>
+</html>
