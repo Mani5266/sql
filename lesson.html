@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Learn SQL · Mind Map · SQLSENSEI</title>
+  <title>Lesson · SQLSENSEI</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -21,7 +21,7 @@
       </a>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
-        <li><a href="mindmap.html" class="active">Learn</a></li>
+        <li><a href="mindmap.html">Learn</a></li>
         <li><a href="playground.html">Playground</a></li>
         <li><a href="interview.html">Interview</a></li>
         <li><a href="patterns.html">Patterns</a></li>
@@ -31,37 +31,10 @@
   </nav>
 
   <main>
-    <section class="container" style="padding: 56px 0 32px;">
-      <div class="badge badge-cyan mb-4">
-        <span class="badge-dot"></span>
-        Complete curriculum · 31 modules
-      </div>
-      <h1 style="font-size: clamp(2.2rem, 5vw, 3.5rem); letter-spacing: -0.025em;">
-        Pick a topic. Start learning.
-      </h1>
-      <p class="text-ink-300 mt-4" style="max-width: 680px; font-size: 1.05rem;">
-        Every module is a self-contained page with concept, examples, practice queries, and key takeaways.
-        Click any node below to jump straight in.
-      </p>
-    </section>
-
-    <section class="container section-sm">
-      <div class="mindmap-wrap" id="mindmap"></div>
-    </section>
-
-    <section class="container section">
-      <div class="card text-center" style="padding: 40px 32px;">
-        <h2 class="mb-4">Want to test what you've learned?</h2>
-        <p class="text-ink-300 mb-6" style="max-width: 520px; margin: 0 auto 24px;">
-          Run real queries on the working dataset in the Playground, or grind interview-style questions from FAANG companies.
-        </p>
-        <div class="flex gap-3 justify-center" style="flex-wrap: wrap;">
-          <a href="playground.html" class="btn btn-primary">▶ Open Playground</a>
-          <a href="interview.html" class="btn btn-secondary">🎯 Interview prep</a>
-          <a href="patterns.html" class="btn btn-ghost">25 SQL patterns</a>
-        </div>
-      </div>
-    </section>
+    <div class="lesson-shell">
+      <aside class="lesson-sidebar" id="lessonSidebar"></aside>
+      <article class="lesson-main" id="lessonMain"></article>
+    </div>
   </main>
 
   <footer class="footer">
@@ -71,10 +44,9 @@
         <span class="mono text-sm">SQLSENSEI</span>
       </div>
       <div class="flex gap-4 text-sm">
-        <a href="mindmap.html">Learn</a>
+        <a href="mindmap.html">Mind Map</a>
         <a href="playground.html">Playground</a>
         <a href="interview.html">Interview</a>
-        <a href="patterns.html">Patterns</a>
         <a href="cheatsheet.html">Cheatsheet</a>
       </div>
     </div>
@@ -83,12 +55,8 @@
   <div class="toast-stack" id="toastStack"></div>
 
   <script src="assets/js/data/curriculum.js"></script>
+  <script src="assets/js/data/lessons.js"></script>
   <script src="assets/js/app.js"></script>
-  <script src="assets/js/mindmap.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      renderMindMap('mindmap');
-    });
-  </script>
+  <script src="assets/js/lesson.js"></script>
 </body>
 </html>

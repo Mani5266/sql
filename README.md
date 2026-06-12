@@ -1,51 +1,41 @@
 # SQLSENSEI
 
-> Master SQL the way senior engineers learned it. Socratic tutor + interactive mind map + in-browser playground + 40 interview questions.
+> Master SQL through a mind-map curriculum, in-browser SQLite, and 40+ real interview questions.
+> Zero setup, zero signup, zero nonsense.
 
-A complete static site for learning SQL from zero to senior. No build, no server, no signup.
-Just open `index.html`.
+**Live:** open `index.html` in any browser.
 
-## Pages
+## What's inside (7 pages, all static)
 
 | Page | What it does |
 |------|--------------|
-| `index.html` | Landing — hero, mind map preview, curriculum overview, interview teaser |
-| `mindmap.html` | Interactive radial mind map of all 31 modules across 5 levels |
-| `curriculum.html` | Browse every module grouped by level |
-| `chat.html` | SQLSENSEI scripted tutor — Socratic method, exercises, hints, checkpoint quizzes |
-| `playground.html` | Real SQLite (via sql.js WASM) with the curriculum dataset preloaded |
-| `interview.html` | 40+ real interview questions tagged by company (Google, Amazon, Meta, Netflix, Stripe, Uber, Goldman, TCS, +more), difficulty, topic, and tricky-but-easy gotchas |
-| `patterns.html` | 25 production SQL recipes (top-N, sessionization, cohorts, gaps & islands, etc.) |
-| `cheatsheet.html` | Single-page syntax reference with PostgreSQL / MySQL / SQLite comparison table |
+| `index.html` | Landing — hero + 6 tiles for each tool |
+| `mindmap.html` | The curriculum as a visual map — click any module to open its lesson |
+| `lesson.html` | Individual lesson page — concept + examples + practice queries + key takeaways |
+| `playground.html` | Real SQLite (sql.js WASM) in your browser, dataset preloaded |
+| `interview.html` | 40+ real interview questions tagged by company, difficulty, topic |
+| `patterns.html` | 25 production SQL recipes (top-N, sessionization, cohorts, etc.) |
+| `cheatsheet.html` | Single-page syntax reference + dialect comparison |
+| `SQL-Practice-Resources.pdf` | Curated external practice sites (clickable links) |
 
 ## Curriculum (5 levels, 31 modules)
 
-- **Level 1 — Foundations** — SELECT, WHERE, ORDER BY, DISTINCT, NULL
-- **Level 2 — Shaping Data** — aggregates, GROUP BY, HAVING, aliases, string/date functions
-- **Level 3 — Multi-Table SQL** — joins, subqueries, CTEs
-- **Level 4 — Advanced SQL** — window functions, CASE WHEN, EXISTS, indexes
-- **Level 5 — Real-World SQL** — schema design, transactions, views, optimization, capstone
-
-Each level ends in a 3-question checkpoint quiz (recall · apply · debug). 3/3 to unlock the next level.
+- **L1 Foundations** — SELECT, WHERE, ORDER BY, DISTINCT, NULL
+- **L2 Shaping Data** — aggregates, GROUP BY, HAVING, strings, dates
+- **L3 Multi-Table SQL** — joins, subqueries, CTEs
+- **L4 Advanced SQL** — window functions, CASE WHEN, EXISTS, indexes
+- **L5 Real-World SQL** — schema design, transactions, views, optimization
 
 ## Stack
 
-Plain HTML / CSS / vanilla JS. sql.js (CDN) for the playground. Google Fonts. **No build step, no dependencies to install.**
+Plain HTML / CSS / vanilla JS. sql.js (CDN) for the playground. Google Fonts. No build, no install.
 
 ## Run locally
 
-Just open `index.html` in any browser, or serve the folder:
-
 ```bash
-# Python
 python -m http.server 8000
-
-# Node
+# or
 npx serve .
 ```
 
 Then go to http://localhost:8000
-
-## Progress is saved to localStorage
-
-Completed modules, current module, streak, quiz scores, query history — all stored in your browser. Reset via `/reset` in the chat or the button on the Mind Map page.

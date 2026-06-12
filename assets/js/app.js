@@ -1,45 +1,10 @@
 /* ============================================
-   SQLSENSEI — Shared app helpers
-   Level grid, toasts, SQL syntax, tables
+   SQLSENSEI — Shared helpers
+   Tables, syntax highlight, toasts, URL params
    ============================================ */
 
 (function () {
   'use strict';
-
-  /* ---------- Level cards grid ---------- */
-  function renderLevels(containerId) {
-    const el = document.getElementById(containerId);
-    if (!el || !window.CURRICULUM) return;
-    const progress = window.getProgress ? window.getProgress() : { completed: [], current: '1.1' };
-    const completed = new Set(progress.completed);
-
-    el.innerHTML = window.CURRICULUM.map(level => {
-      const done = level.modules.filter(m => completed.has(m.id)).length;
-      const total = level.modules.length;
-      const pct = Math.round((done / total) * 100);
-
-      return `
-        <a href="chat.html?module=${level.modules[0].id}" class="level-card" style="--level-color: ${level.color};">
-          <div class="level-number">LEVEL ${String(level.number).padStart(2,'0')}</div>
-          <div class="level-title">${level.title}</div>
-          <div class="level-tagline">${level.tagline}</div>
-          <ul class="level-modules">
-            ${level.modules.map(m => `
-              <li class="${completed.has(m.id) ? 'completed' : ''}">
-                <span style="color: var(--ink-500); font-family: var(--font-mono); font-size: 0.75rem;">${m.id}</span>
-                <span>${m.title}</span>
-              </li>
-            `).join('')}
-          </ul>
-          <div class="level-progress"><div class="level-progress-fill" style="width: ${pct}%;"></div></div>
-          <div class="level-meta">
-            <span>${done} / ${total} modules</span>
-            <span>${pct}%</span>
-          </div>
-        </a>
-      `;
-    }).join('');
-  }
 
   /* ---------- Sample-data table renderer ---------- */
   function renderTable(tableName, opts = {}) {
@@ -80,7 +45,7 @@
     `;
   }
 
-  /* ---------- SQL syntax highlighting (lightweight) ---------- */
+  /* ---------- SQL syntax highlighting ---------- */
   const SQL_KEYWORDS = new Set([
     'select','from','where','and','or','not','in','between','like','is','null',
     'order','by','group','having','limit','offset','distinct','as',
@@ -91,45 +56,34 @@
     'insert','into','values','update','set','delete','create','table','drop','alter','add','column','primary','key','foreign','references','default','unique','index',
     'begin','commit','rollback','transaction','savepoint',
     'partition','over','rows','range','preceding','following','current','row',
-    'asc','desc','true','false','if','ifnull','coalesce'
+    'asc','desc','true','false','if','ifnull','coalesce','interval'
   ]);
 
   const SQL_FUNCTIONS = new Set([
     'count','sum','avg','min','max',
-    'upper','lower','concat','substring','substr','length','trim','replace',
-    'now','current_date','current_timestamp','date_part','datediff','date_format','date_add','date_sub','extract','to_char',
+    'upper','lower','concat','substring','substr','length','trim','replace','instr',
+    'now','current_date','current_timestamp','date_part','datediff','date_format','date_add','date_sub','extract','to_char','strftime','julianday',
     'row_number','rank','dense_rank','ntile','lag','lead','first_value','last_value',
     'round','floor','ceil','abs','mod','power','sqrt',
-    'cast','convert'
+    'cast','convert','generate_series'
   ]);
 
   function highlightSQL(code) {
     if (!code) return '';
-    // 1. Escape HTML
     let s = code
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;');
 
-    // 2. Comments (-- and /* */)
     s = s.replace(/(--[^\n]*)/g, '<span class="sql-comment">$1</span>');
     s = s.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="sql-comment">$1</span>');
-
-    // 3. Strings
     s = s.replace(/('([^'\\]|\\.)*')/g, '<span class="sql-string">$1</span>');
-
-    // 4. Numbers
     s = s.replace(/\b(\d+(\.\d+)?)\b/g, '<span class="sql-number">$1</span>');
 
-    // 5. Keywords + functions (case-insensitive, word boundaries)
     s = s.replace(/\b([a-zA-Z_]+)\b/g, (m, word) => {
       const lower = word.toLowerCase();
-      if (SQL_KEYWORDS.has(lower)) {
-        return `<span class="sql-keyword">${word.toUpperCase()}</span>`;
-      }
-      if (SQL_FUNCTIONS.has(lower)) {
-        return `<span class="sql-fn">${word.toUpperCase()}</span>`;
-      }
+      if (SQL_KEYWORDS.has(lower)) return `<span class="sql-keyword">${word.toUpperCase()}</span>`;
+      if (SQL_FUNCTIONS.has(lower)) return `<span class="sql-fn">${word.toUpperCase()}</span>`;
       return word;
     });
 
@@ -164,7 +118,6 @@
   }
 
   /* ---------- Expose ---------- */
-  window.renderLevels = renderLevels;
   window.renderTable = renderTable;
   window.renderResultTable = renderResultTable;
   window.highlightSQL = highlightSQL;

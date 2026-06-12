@@ -3,18 +3,122 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SQLSENSEI — Master SQL from zero to senior</title>
-  <meta name="description" content="Learn SQL the Socratic way. Five levels, 30+ modules, real datasets, in-browser playground. Built by SQLSENSEI." />
+  <title>SQLSENSEI — Master SQL, the way senior engineers learned it</title>
+  <meta name="description" content="Learn SQL through a mind-map curriculum, run real queries in your browser, and grind interview questions from Google, Amazon, Meta, and Netflix. No signup, no setup." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/styles.css" />
   <link rel="stylesheet" href="assets/css/components.css" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2306b6d4'/%3E%3Ctext x='50' y='66' text-anchor='middle' font-family='monospace' font-size='52' font-weight='700' fill='%23000'%3ES%3C/text%3E%3C/svg%3E" />
+  <style>
+    /* Tile grid for what's inside */
+    .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+
+    .tile {
+      position: relative;
+      background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 28px;
+      text-decoration: none;
+      transition: all 0.3s var(--ease);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 220px;
+    }
+
+    .tile::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, var(--tile-color, var(--cyan-400)) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s var(--ease);
+      pointer-events: none;
+    }
+
+    .tile:hover {
+      transform: translateY(-4px);
+      border-color: var(--tile-color, var(--cyan-400));
+    }
+
+    .tile:hover::after { opacity: 0.08; }
+
+    .tile-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+      font-size: 1.4rem;
+      margin-bottom: 16px;
+      color: var(--tile-color, var(--cyan-400));
+    }
+
+    .tile h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--ink-100);
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+
+    .tile p {
+      color: var(--ink-300);
+      font-size: 0.875rem;
+      line-height: 1.55;
+      flex: 1;
+    }
+
+    .tile-cta {
+      margin-top: 16px;
+      color: var(--tile-color, var(--cyan-400));
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.2s var(--ease);
+    }
+
+    .tile:hover .tile-cta { transform: translateX(4px); }
+
+    /* Companies showcase */
+    .companies-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .company-pill {
+      padding: 14px;
+      background: var(--bg-1);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.2s var(--ease);
+    }
+
+    .company-pill:hover {
+      border-color: var(--cyan-400);
+      transform: translateY(-2px);
+    }
+
+    .company-pill-emoji { font-size: 1.6rem; margin-bottom: 4px; }
+    .company-pill-name { font-weight: 600; color: var(--ink-100); font-size: 0.85rem; }
+  </style>
 </head>
 <body>
 
-  <!-- ============================================ NAV ============================================ -->
   <nav class="nav">
     <div class="nav-inner">
       <a href="index.html" class="brand">
@@ -23,13 +127,11 @@
       </a>
       <ul class="nav-links">
         <li><a href="index.html" class="active">Home</a></li>
-        <li><a href="mindmap.html">Mind Map</a></li>
-        <li><a href="curriculum.html">Curriculum</a></li>
+        <li><a href="mindmap.html">Learn</a></li>
         <li><a href="playground.html">Playground</a></li>
         <li><a href="interview.html">Interview</a></li>
         <li><a href="patterns.html">Patterns</a></li>
         <li><a href="cheatsheet.html">Cheatsheet</a></li>
-        <li><a href="chat.html" class="btn btn-primary btn-sm" style="margin-left: 8px;">Start Learning →</a></li>
       </ul>
     </div>
   </nav>
@@ -40,7 +142,7 @@
     <section class="hero container">
       <div class="hero-eyebrow fade-in">
         <span class="badge-dot" style="color: var(--cyan-400);"></span>
-        Socratic SQL tutor · 5 levels · 30+ modules
+        Zero setup · Free · Open source
       </div>
 
       <h1 class="hero-title fade-in-delay-1">
@@ -49,227 +151,177 @@
       </h1>
 
       <p class="hero-subtitle fade-in-delay-2">
-        SQLSENSEI is your patient, precise tutor with 15+ years of database engineering experience.
-        Learn through real datasets, real queries, and real practice — never abstract theory.
-        No skipping. Every concept earned.
+        Mind-map curriculum. Real SQLite in your browser. 40+ real interview questions from Google, Amazon, Meta.
+        No signup. No setup. No nonsense.
       </p>
 
       <div class="hero-actions fade-in-delay-3">
-        <a href="chat.html" class="btn btn-primary btn-lg">
-          Start with Module 1.1
-          <span>→</span>
+        <a href="mindmap.html" class="btn btn-primary btn-lg">
+          Start Learning →
         </a>
-        <a href="mindmap.html" class="btn btn-secondary btn-lg">
-          View the Mind Map
+        <a href="playground.html" class="btn btn-secondary btn-lg">
+          ▶ Open Playground
         </a>
         <a href="interview.html" class="btn btn-ghost btn-lg">
-          🎤 Interview Prep
+          🎯 Interview Prep
         </a>
       </div>
 
       <div class="hero-stats fade-in-delay-3">
         <div class="hero-stat">
-          <div class="hero-stat-value">5</div>
-          <div class="hero-stat-label">Levels, zero to senior</div>
-        </div>
-        <div class="hero-stat">
           <div class="hero-stat-value">31</div>
-          <div class="hero-stat-label">Focused modules</div>
+          <div class="hero-stat-label">Focused lessons</div>
         </div>
         <div class="hero-stat">
-          <div class="hero-stat-value">100+</div>
-          <div class="hero-stat-label">Practice exercises</div>
+          <div class="hero-stat-value">40+</div>
+          <div class="hero-stat-label">Interview questions</div>
         </div>
         <div class="hero-stat">
-          <div class="hero-stat-value">0</div>
-          <div class="hero-stat-label">Setup required</div>
+          <div class="hero-stat-value">25</div>
+          <div class="hero-stat-label">SQL patterns</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value">15</div>
+          <div class="hero-stat-label">Companies covered</div>
         </div>
       </div>
     </section>
 
-    <!-- ============================================ MIND MAP PREVIEW ============================================ -->
+    <!-- ============================================ WHAT'S INSIDE ============================================ -->
     <section class="container section">
-      <div class="flex items-center justify-between mb-8" style="flex-wrap: wrap; gap: 16px;">
-        <div>
-          <div class="badge badge-cyan mb-4">
-            <span class="badge-dot"></span>
-            Visual learning path
-          </div>
-          <h2>One mind map. The entire SQL universe.</h2>
-          <p class="text-ink-300 mt-4" style="max-width: 600px;">
-            See how every concept connects before you write a single query. Click any node to jump straight to its lesson.
-          </p>
+      <div class="text-center mb-12">
+        <div class="badge badge-cyan mb-4" style="margin: 0 auto;">
+          <span class="badge-dot"></span>
+          What's inside
         </div>
-        <a href="mindmap.html" class="btn btn-ghost">
-          Open full mind map →
+        <h2 style="font-size: clamp(1.8rem, 4vw, 2.5rem);">5 tools. One goal: make you fluent.</h2>
+        <p class="text-ink-300 mt-4" style="max-width: 600px; margin: 16px auto 0;">
+          Each tool does one job exceptionally well. Use them in order, or jump straight to what you need.
+        </p>
+      </div>
+
+      <div class="tiles">
+        <a href="mindmap.html" class="tile" style="--tile-color: #22d3ee;">
+          <div class="tile-icon">🗺️</div>
+          <h3>Mind Map Curriculum</h3>
+          <p>5 levels, 31 modules. Each one a focused page with concept, examples, practice queries, and key takeaways. Visual learning, not video.</p>
+          <div class="tile-cta">Explore the map →</div>
+        </a>
+
+        <a href="playground.html" class="tile" style="--tile-color: #34d399;">
+          <div class="tile-icon">▶</div>
+          <h3>SQL Playground</h3>
+          <p>Real SQLite running in your browser (no install). The full dataset is preloaded. Write any query, hit run, see results in milliseconds.</p>
+          <div class="tile-cta">Run a query →</div>
+        </a>
+
+        <a href="interview.html" class="tile" style="--tile-color: #fb7185;">
+          <div class="tile-icon">🎯</div>
+          <h3>Interview Prep</h3>
+          <p>40+ real questions tagged by company (Google, Amazon, Meta, Netflix, Stripe...), difficulty, and topic. Plus the tricky-but-easy gotcha set.</p>
+          <div class="tile-cta">See the questions →</div>
+        </a>
+
+        <a href="patterns.html" class="tile" style="--tile-color: #a78bfa;">
+          <div class="tile-icon">⚡</div>
+          <h3>25 SQL Patterns</h3>
+          <p>Top-N per group, sessionization, cohort retention, gaps &amp; islands, pivots. The recipes that solve 95% of real-world problems.</p>
+          <div class="tile-cta">Browse patterns →</div>
+        </a>
+
+        <a href="cheatsheet.html" class="tile" style="--tile-color: #fbbf24;">
+          <div class="tile-icon">📋</div>
+          <h3>Single-page Cheatsheet</h3>
+          <p>Every syntax, every dialect (PostgreSQL · MySQL · SQLite). One scrollable page. Bookmark it, print it, reference it during interviews.</p>
+          <div class="tile-cta">Open cheatsheet →</div>
+        </a>
+
+        <a href="SQL-Practice-Resources.pdf" class="tile" style="--tile-color: #38bdf8;">
+          <div class="tile-icon">📄</div>
+          <h3>Resources PDF</h3>
+          <p>The honest, ranked list of 15+ external practice sites — LeetCode, DataLemur, StrataScratch, and more. Clickable links inside.</p>
+          <div class="tile-cta">Download PDF →</div>
         </a>
       </div>
-
-      <div class="mindmap-wrap" id="mindmap-preview">
-        <!-- Filled by mindmap.js -->
-      </div>
     </section>
 
-    <!-- ============================================ CURRICULUM ============================================ -->
+    <!-- ============================================ INTERVIEW COMPANIES ============================================ -->
     <section class="container section">
-      <div class="text-center mb-12">
-        <div class="badge badge-amber mb-4" style="margin: 0 auto;">
-          <span class="badge-dot"></span>
-          The curriculum
-        </div>
-        <h2>Five levels. Strict progression. Real mastery.</h2>
-        <p class="text-ink-300 mt-4" style="max-width: 600px; margin: 16px auto 0;">
-          Each level ends in a 3-question checkpoint quiz. Score 3/3 or you don't unlock the next one.
-          The way actual learning works.
-        </p>
-      </div>
-
-      <div class="levels-grid" id="levelsGrid">
-        <!-- Filled by app.js -->
-      </div>
-    </section>
-
-    <!-- ============================================ HOW IT WORKS ============================================ -->
-    <section class="container section">
-      <div class="text-center mb-12">
-        <div class="badge badge-violet mb-4" style="margin: 0 auto;">
-          <span class="badge-dot"></span>
-          The method
-        </div>
-        <h2>EXPLAIN → DEMONSTRATE → PRACTICE → REVIEW</h2>
-        <p class="text-ink-300 mt-4" style="max-width: 600px; margin: 16px auto 0;">
-          Every module runs this exact loop. No shortcuts. Each concept is grounded in a real dataset you'll grow familiar with.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-4 gap-4">
-        <div class="card card-accent">
-          <div class="badge badge-cyan mb-4" style="font-size: 0.65rem;">STEP 01</div>
-          <h3>Explain</h3>
-          <p class="text-ink-300 text-sm mt-2">Plain English first. The idea behind the syntax. Two or three sentences max.</p>
-        </div>
-        <div class="card card-accent">
-          <div class="badge badge-cyan mb-4" style="font-size: 0.65rem;">STEP 02</div>
-          <h3>Demonstrate</h3>
-          <p class="text-ink-300 text-sm mt-2">A working query on a real table. See the input, see the output. No abstractions.</p>
-        </div>
-        <div class="card card-accent">
-          <div class="badge badge-cyan mb-4" style="font-size: 0.65rem;">STEP 03</div>
-          <h3>Practice</h3>
-          <p class="text-ink-300 text-sm mt-2">One focused exercise. You write the query. SQLSENSEI checks it against the expected result.</p>
-        </div>
-        <div class="card card-accent">
-          <div class="badge badge-cyan mb-4" style="font-size: 0.65rem;">STEP 04</div>
-          <h3>Review</h3>
-          <p class="text-ink-300 text-sm mt-2">Three key takeaways. Then a checkpoint quiz at the end of every level.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============================================ DATASET ============================================ -->
-    <section class="container section">
-      <div class="grid" style="grid-template-columns: 1fr 1.4fr; gap: 48px; align-items: center;">
-        <div>
-          <div class="badge badge-emerald mb-4">
-            <span class="badge-dot"></span>
-            Real data, all the way
-          </div>
-          <h2>Learn on one e-commerce dataset. Forever.</h2>
-          <p class="text-ink-300 mt-4 mb-6">
-            Five tables. Realistic sample rows. You'll know them by heart by Level 3, and that familiarity is what unlocks fast SQL intuition.
-          </p>
-          <div class="flex flex-col gap-3">
-            <div class="flex items-center gap-3">
-              <span class="badge badge-cyan">customers</span>
-              <span class="text-ink-300 text-sm">Who buys things — name, city, age, signup date</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <span class="badge badge-cyan">products</span>
-              <span class="text-ink-300 text-sm">What's for sale — category, price, stock</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <span class="badge badge-cyan">orders</span>
-              <span class="text-ink-300 text-sm">What was ordered — when, by whom, total</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <span class="badge badge-cyan">order_items</span>
-              <span class="text-ink-300 text-sm">Line items inside each order</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <span class="badge badge-cyan">employees</span>
-              <span class="text-ink-300 text-sm">Staff, departments, managers (self-joins!)</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="data-table-wrap">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>customer_id</th>
-                <th>name</th>
-                <th>email</th>
-                <th>city</th>
-                <th>signup_date</th>
-                <th>age</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>1</td><td>Aarav Mehta</td><td>aarav@mail.com</td><td>Mumbai</td><td>2024-01-12</td><td>28</td></tr>
-              <tr><td>2</td><td>Sofia Reyes</td><td>sofia@mail.com</td><td>Madrid</td><td>2024-02-04</td><td>34</td></tr>
-              <tr><td>3</td><td>Kenji Tanaka</td><td>kenji@mail.com</td><td>Tokyo</td><td>2024-02-19</td><td>41</td></tr>
-              <tr><td>4</td><td>Priya Singh</td><td>priya@mail.com</td><td>Delhi</td><td>2024-03-08</td><td>26</td></tr>
-              <tr><td>5</td><td>Liam Doyle</td><td>liam@mail.com</td><td>Dublin</td><td>2024-04-22</td><td>52</td></tr>
-              <tr><td>6</td><td>Chen Wei</td><td>chen@mail.com</td><td>Shanghai</td><td>2024-05-15</td><td>31</td></tr>
-              <tr><td>7</td><td>Amara Okafor</td><td>amara@mail.com</td><td>Lagos</td><td>2024-06-30</td><td>29</td></tr>
-              <tr><td>8</td><td>Noa Cohen</td><td>noa@mail.com</td><td>Tel Aviv</td><td>2024-08-11</td><td>45</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============================================ INTERVIEW PREP ============================================ -->
-    <section class="container section">
-      <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 32px; align-items: center;">
+      <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;">
         <div>
           <div class="badge badge-rose mb-4">
             <span class="badge-dot"></span>
-            Job hunting? Start here
+            Real interview questions
           </div>
-          <h2>40+ real SQL interview questions from Google, Amazon, Meta &amp; more.</h2>
+          <h2 style="font-size: clamp(1.6rem, 3vw, 2.2rem); letter-spacing: -0.02em;">
+            40+ questions, tagged by the company that asked them.
+          </h2>
           <p class="text-ink-300 mt-4 mb-6">
-            Tagged by company, difficulty, topic, and frequency. Includes the famous
-            <strong style="color: var(--violet-400);">"tricky-but-easy"</strong> set — gotchas where 70% of candidates get it wrong even though the question looks trivial.
+            Click any company to see the questions they're known for. Plus the
+            <strong style="color: var(--violet-400);">tricky-but-easy</strong> set —
+            the gotchas senior engineers love to throw at confident candidates.
           </p>
           <div class="flex gap-3" style="flex-wrap: wrap;">
-            <a href="interview.html" class="btn btn-primary">Open Interview Prep →</a>
-            <a href="interview.html?tricky=1" class="btn btn-secondary">💀 Tricky questions only</a>
+            <a href="interview.html" class="btn btn-primary">All questions →</a>
+            <a href="interview.html?tricky=1" class="btn btn-secondary">💀 Tricky ones only</a>
           </div>
         </div>
-        <div class="grid grid-cols-2 gap-3">
-          <a href="interview.html?company=google" class="card" style="text-decoration: none; padding: 16px; text-align: center;">
-            <div style="font-size: 1.8rem;">🔵</div>
-            <div style="font-weight: 600; margin-top: 4px;">Google</div>
-            <div class="text-ink-400 text-xs">Window functions, optimization</div>
+        <div class="companies-row">
+          <a href="interview.html?company=google" class="company-pill">
+            <div class="company-pill-emoji">🔵</div>
+            <div class="company-pill-name">Google</div>
           </a>
-          <a href="interview.html?company=amazon" class="card" style="text-decoration: none; padding: 16px; text-align: center;">
-            <div style="font-size: 1.8rem;">📦</div>
-            <div style="font-weight: 600; margin-top: 4px;">Amazon</div>
-            <div class="text-ink-400 text-xs">Business metrics, top-N</div>
+          <a href="interview.html?company=amazon" class="company-pill">
+            <div class="company-pill-emoji">📦</div>
+            <div class="company-pill-name">Amazon</div>
           </a>
-          <a href="interview.html?company=meta" class="card" style="text-decoration: none; padding: 16px; text-align: center;">
-            <div style="font-size: 1.8rem;">👤</div>
-            <div style="font-weight: 600; margin-top: 4px;">Meta</div>
-            <div class="text-ink-400 text-xs">Funnels, social graph</div>
+          <a href="interview.html?company=meta" class="company-pill">
+            <div class="company-pill-emoji">👤</div>
+            <div class="company-pill-name">Meta</div>
           </a>
-          <a href="interview.html?company=netflix" class="card" style="text-decoration: none; padding: 16px; text-align: center;">
-            <div style="font-size: 1.8rem;">🎬</div>
-            <div style="font-weight: 600; margin-top: 4px;">Netflix</div>
-            <div class="text-ink-400 text-xs">Sessions, cohorts</div>
+          <a href="interview.html?company=netflix" class="company-pill">
+            <div class="company-pill-emoji">🎬</div>
+            <div class="company-pill-name">Netflix</div>
+          </a>
+          <a href="interview.html?company=apple" class="company-pill">
+            <div class="company-pill-emoji">🍎</div>
+            <div class="company-pill-name">Apple</div>
+          </a>
+          <a href="interview.html?company=stripe" class="company-pill">
+            <div class="company-pill-emoji">💳</div>
+            <div class="company-pill-name">Stripe</div>
+          </a>
+          <a href="interview.html?company=uber" class="company-pill">
+            <div class="company-pill-emoji">🚗</div>
+            <div class="company-pill-name">Uber</div>
+          </a>
+          <a href="interview.html?company=airbnb" class="company-pill">
+            <div class="company-pill-emoji">🏡</div>
+            <div class="company-pill-name">Airbnb</div>
           </a>
         </div>
       </div>
+    </section>
+
+    <!-- ============================================ MIND MAP TEASER ============================================ -->
+    <section class="container section">
+      <div class="flex items-center justify-between mb-8" style="flex-wrap: wrap; gap: 16px;">
+        <div>
+          <div class="badge badge-amber mb-4">
+            <span class="badge-dot"></span>
+            The learning path
+          </div>
+          <h2 style="font-size: clamp(1.6rem, 3vw, 2.2rem); letter-spacing: -0.02em;">
+            One map. Every concept. No skipping.
+          </h2>
+          <p class="text-ink-300 mt-4" style="max-width: 540px;">
+            Click any node to open that lesson. The path goes from "what is a database" to query optimization.
+          </p>
+        </div>
+        <a href="mindmap.html" class="btn btn-primary">Open full mind map →</a>
+      </div>
+
+      <div class="mindmap-wrap" id="mindmap-preview"></div>
     </section>
 
     <!-- ============================================ FINAL CTA ============================================ -->
@@ -279,31 +331,32 @@
           <span class="badge-dot"></span>
           Ready when you are
         </div>
-        <h2 class="mb-4">Your first query in 60 seconds.</h2>
+        <h2 class="mb-4" style="font-size: clamp(1.8rem, 4vw, 2.5rem); letter-spacing: -0.02em;">Your first query in 60 seconds.</h2>
         <p class="text-ink-300 mb-8" style="max-width: 540px; margin: 0 auto 32px;">
-          No signup. No card. No setup. Open the chat, tell SQLSENSEI where you're starting, and write your first SELECT today.
+          No signup, no card, no setup. Pick a lesson, run a query, or grind interview questions. Whatever stage you're at.
         </p>
         <div class="flex gap-3 justify-center" style="flex-wrap: wrap;">
-          <a href="chat.html" class="btn btn-primary btn-lg">Begin Module 1.1 →</a>
-          <a href="playground.html" class="btn btn-secondary btn-lg">Open the Playground</a>
+          <a href="mindmap.html" class="btn btn-primary btn-lg">Begin learning →</a>
+          <a href="playground.html" class="btn btn-secondary btn-lg">Just play around</a>
         </div>
       </div>
     </section>
 
   </main>
 
-  <!-- ============================================ FOOTER ============================================ -->
   <footer class="footer">
     <div class="container footer-inner">
       <div class="flex items-center gap-3">
         <span class="brand-mark" style="width: 24px; height: 24px; font-size: 0.6rem;">SQ</span>
-        <span class="mono text-sm">SQLSENSEI · v1.0 · Patient. Precise. Practical.</span>
+        <span class="mono text-sm">SQLSENSEI · Free &amp; open source</span>
       </div>
       <div class="flex gap-4 text-sm">
-        <a href="mindmap.html">Mind Map</a>
-        <a href="curriculum.html">Curriculum</a>
+        <a href="mindmap.html">Learn</a>
         <a href="playground.html">Playground</a>
+        <a href="interview.html">Interview</a>
+        <a href="patterns.html">Patterns</a>
         <a href="cheatsheet.html">Cheatsheet</a>
+        <a href="https://github.com/Mani5266/sql">GitHub</a>
       </div>
     </div>
   </footer>
@@ -311,12 +364,11 @@
   <div class="toast-stack" id="toastStack"></div>
 
   <script src="assets/js/data/curriculum.js"></script>
-  <script src="assets/js/mindmap.js"></script>
   <script src="assets/js/app.js"></script>
+  <script src="assets/js/mindmap.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      if (window.renderMindMap) window.renderMindMap('mindmap-preview', { compact: false });
-      if (window.renderLevels) window.renderLevels('levelsGrid');
+      renderMindMap('mindmap-preview');
     });
   </script>
 </body>
