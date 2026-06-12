@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SQL Practice — 80 Real-World Questions · SQLSENSEI</title>
-  <meta name="description" content="StrataScratch-style SQL practice: read the question, write SQL in the editor, run + check. 80 real-world questions across 8 topics." />
+  <title>Company Practice — Real Interview SQL by Company · SQLSENSEI</title>
+  <meta name="description" content="150+ real SQL interview questions from Google, Amazon, Meta, Netflix, Apple, Microsoft, Uber, Airbnb, Stripe, LinkedIn. Filter by company, topic, difficulty. Write SQL in the editor, run + check." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -15,16 +15,20 @@
     body { overflow: hidden; }
     body::after { display: none; }
 
-    /* ===== Layout ===== */
-    .pgs-app {
+    /* Layout: 3-column */
+    .cp-app {
       display: grid;
-      grid-template-columns: 260px 1fr 1fr;
+      grid-template-columns: 220px 1fr 1fr;
+      grid-template-rows: auto 1fr;
+      grid-template-areas:
+        "sidebar topbar topbar"
+        "sidebar question editor";
       height: calc(100vh - 65px);
       background: var(--bg-0);
     }
 
-    /* ===== Left sidebar ===== */
-    .pgs-sidebar {
+    .cp-sidebar {
+      grid-area: sidebar;
       background: var(--bg-1);
       border-right: 1px solid var(--line);
       overflow-y: auto;
@@ -32,8 +36,8 @@
       flex-direction: column;
     }
 
-    .pgs-sidebar-section { padding: 16px; }
-    .pgs-sidebar h3 {
+    .cp-sidebar-section { padding: 14px; }
+    .cp-sidebar h3 {
       font-size: 0.7rem;
       font-family: var(--font-mono);
       text-transform: uppercase;
@@ -43,7 +47,7 @@
       font-weight: 500;
     }
 
-    .pgs-topic {
+    .cp-company {
       display: flex;
       align-items: center;
       gap: 10px;
@@ -56,48 +60,43 @@
       cursor: pointer;
       transition: all 0.2s var(--ease);
       text-align: left;
-      margin-bottom: 3px;
+      margin-bottom: 2px;
       font-family: var(--font-sans);
     }
 
-    .pgs-topic:hover {
-      background: var(--bg-2);
+    .cp-company:hover { background: var(--bg-2); color: var(--ink-100); }
+    .cp-company.active {
+      background: var(--bg-3);
+      border-color: var(--co-color);
       color: var(--ink-100);
     }
+    .cp-company.active .cp-company-name { color: var(--co-color); font-weight: 600; }
 
-    .pgs-topic.active {
-      background: rgba(34, 211, 238, 0.08);
-      border-color: rgba(34, 211, 238, 0.3);
-      color: var(--cyan-400);
-      font-weight: 600;
-    }
-
-    .pgs-topic-icon { font-size: 1rem; flex-shrink: 0; }
-    .pgs-topic-label { flex: 1; font-size: 0.8125rem; }
-    .pgs-topic-count {
+    .cp-company-emoji { font-size: 1rem; flex-shrink: 0; }
+    .cp-company-name { flex: 1; font-size: 0.85rem; }
+    .cp-company-count {
       background: var(--bg-3);
       padding: 1px 7px;
       border-radius: 999px;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       font-family: var(--font-mono);
       color: var(--ink-400);
     }
+    .cp-company.active .cp-company-count { background: var(--co-color); color: var(--bg-0); }
 
-    .pgs-topic.active .pgs-topic-count { background: var(--cyan-400); color: var(--bg-0); }
-
-    /* Question list */
-    .pgs-q-list {
+    .cp-q-list {
       border-top: 1px solid var(--line);
-      padding: 12px 16px;
+      padding: 12px 14px;
       flex: 1;
+      overflow-y: auto;
     }
 
-    .pgs-q-item {
+    .cp-q-item {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       width: 100%;
-      padding: 8px 10px;
+      padding: 7px 10px;
       background: transparent;
       border: 1px solid transparent;
       border-radius: 6px;
@@ -109,82 +108,136 @@
       font-family: var(--font-sans);
     }
 
-    .pgs-q-item:hover { background: var(--bg-2); color: var(--ink-100); }
-    .pgs-q-item.active {
-      background: var(--bg-3);
-      color: var(--ink-100);
-      border-color: var(--line-strong);
-    }
+    .cp-q-item:hover { background: var(--bg-2); color: var(--ink-100); }
+    .cp-q-item.active { background: var(--bg-3); color: var(--ink-100); border-color: var(--line-strong); }
 
-    .pgs-q-num { font-family: var(--font-mono); font-size: 0.7rem; color: var(--ink-500); flex-shrink: 0; min-width: 22px; }
-    .pgs-q-title { flex: 1; font-size: 0.8125rem; line-height: 1.3; }
-    .pgs-q-diff {
+    .cp-q-num { font-family: var(--font-mono); font-size: 0.65rem; color: var(--ink-500); flex-shrink: 0; min-width: 20px; }
+    .cp-q-title { flex: 1; font-size: 0.75rem; line-height: 1.3; }
+    .cp-q-co { font-size: 0.85rem; flex-shrink: 0; }
+    .cp-q-diff {
       font-family: var(--font-mono);
-      font-size: 0.65rem;
+      font-size: 0.6rem;
       font-weight: 700;
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       border-radius: 4px;
       display: grid;
       place-items: center;
       flex-shrink: 0;
     }
+    .cp-q-diff.diff-easy { background: rgba(52,211,153,0.15); color: var(--emerald-400); }
+    .cp-q-diff.diff-medium { background: rgba(251,191,36,0.15); color: var(--amber-400); }
+    .cp-q-diff.diff-hard { background: rgba(251,113,133,0.15); color: var(--rose-400); }
 
-    .pgs-q-diff.diff-easy { background: rgba(52,211,153,0.15); color: var(--emerald-400); }
-    .pgs-q-diff.diff-medium { background: rgba(251,191,36,0.15); color: var(--amber-400); }
-    .pgs-q-diff.diff-hard { background: rgba(251,113,133,0.15); color: var(--rose-400); }
+    /* TOP BAR — filter chips */
+    .cp-topbar {
+      grid-area: topbar;
+      background: var(--bg-1);
+      border-bottom: 1px solid var(--line);
+      padding: 12px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
 
-    /* ===== Question panel (middle) ===== */
-    .pgs-question {
+    .cp-filter-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .cp-filter-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-400);
+      margin-right: 6px;
+      flex-shrink: 0;
+      min-width: 50px;
+    }
+
+    .cp-chip {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--bg-2);
+      border: 1px solid var(--line);
+      color: var(--ink-300);
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s var(--ease);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .cp-chip:hover { background: var(--bg-3); color: var(--ink-100); }
+    .cp-chip.active {
+      background: var(--cyan-400);
+      color: var(--bg-0);
+      border-color: var(--cyan-400);
+      font-weight: 600;
+    }
+    .cp-chip:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    .cp-chip-count {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      opacity: 0.7;
+    }
+
+    .cp-chip-diff.diff-easy.active { background: var(--emerald-400); border-color: var(--emerald-400); }
+    .cp-chip-diff.diff-medium.active { background: var(--amber-400); border-color: var(--amber-400); }
+    .cp-chip-diff.diff-hard.active { background: var(--rose-400); border-color: var(--rose-400); }
+
+    /* QUESTION PANEL */
+    .cp-question {
+      grid-area: question;
       overflow-y: auto;
       background: var(--bg-0);
       border-right: 1px solid var(--line);
-      padding: 24px 28px;
+      padding: 22px 26px;
     }
 
     .pgs-q-breadcrumb {
       font-family: var(--font-mono);
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--ink-400);
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .pgs-q-h {
       font-family: var(--font-display);
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       font-weight: 700;
       color: var(--ink-100);
       letter-spacing: -0.02em;
       line-height: 1.15;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .pgs-q-meta {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       flex-wrap: wrap;
-      margin-bottom: 22px;
+      margin-bottom: 20px;
     }
 
     .pgs-tag {
-      padding: 3px 10px;
+      padding: 3px 9px;
       border-radius: 6px;
       font-family: var(--font-mono);
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 600;
       background: var(--bg-2);
       color: var(--ink-300);
       border: 1px solid var(--line);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .pgs-tag-company {
-      background: rgba(34,211,238,0.08);
-      color: var(--cyan-400);
-      border-color: rgba(34,211,238,0.25);
+      letter-spacing: 0.04em;
     }
 
     .pgs-tag-diff.diff-easy { background: rgba(52,211,153,0.1); color: var(--emerald-400); border-color: rgba(52,211,153,0.3); }
@@ -195,12 +248,12 @@
       background: var(--bg-1);
       border: 1px solid var(--line);
       border-left: 3px solid var(--cyan-400);
-      padding: 16px 20px;
+      padding: 14px 18px;
       border-radius: 10px;
       color: var(--ink-100);
-      font-size: 0.95rem;
-      line-height: 1.7;
-      margin-bottom: 24px;
+      font-size: 0.92rem;
+      line-height: 1.65;
+      margin-bottom: 20px;
     }
 
     .pgs-q-prompt code {
@@ -213,7 +266,7 @@
 
     .pgs-q-tables-label {
       font-family: var(--font-mono);
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--cyan-400);
       text-transform: uppercase;
       letter-spacing: 0.08em;
@@ -224,9 +277,9 @@
     .pgs-table-preview {
       background: var(--bg-1);
       border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 10px 14px;
-      margin-bottom: 8px;
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 6px;
     }
 
     .pgs-table-preview summary {
@@ -235,7 +288,7 @@
       align-items: center;
       cursor: pointer;
       font-family: var(--font-mono);
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: var(--ink-200);
       list-style: none;
     }
@@ -245,118 +298,108 @@
       content: '▸';
       color: var(--ink-500);
       margin-right: 8px;
-      transition: transform 0.15s;
       display: inline-block;
+      transition: transform 0.15s;
     }
-
     .pgs-table-preview[open] summary::before { transform: rotate(90deg); }
 
     .pgs-table-name { color: var(--cyan-400); font-weight: 600; }
-    .pgs-table-meta { font-size: 0.7rem; color: var(--ink-500); }
+    .pgs-table-meta { font-size: 0.65rem; color: var(--ink-500); }
 
     .pgs-q-nav {
       display: flex;
       justify-content: space-between;
-      margin-top: 28px;
-      padding-top: 20px;
+      margin-top: 24px;
+      padding-top: 18px;
       border-top: 1px solid var(--line);
     }
 
-    /* ===== Editor panel (right) ===== */
-    .pgs-editor-panel {
+    /* EDITOR PANEL */
+    .cp-editor-panel {
+      grid-area: editor;
       display: flex;
       flex-direction: column;
       background: var(--bg-1);
       overflow: hidden;
     }
 
-    .pgs-editor-toolbar {
+    .cp-editor-toolbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 18px;
+      padding: 10px 16px;
       border-bottom: 1px solid var(--line);
       background: var(--bg-0);
       gap: 8px;
       flex-wrap: wrap;
     }
 
-    .pgs-editor-toolbar-left {
+    .cp-editor-toolbar-left {
       display: flex;
       align-items: center;
       gap: 10px;
       font-family: var(--font-mono);
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--ink-300);
     }
 
-    .pgs-editor-toolbar-right { display: flex; gap: 6px; }
+    .cp-editor-toolbar-right { display: flex; gap: 6px; }
 
-    #pgsEditor {
+    #cpEditor {
       flex: 1;
-      min-height: 200px;
+      min-height: 180px;
       max-height: 40%;
       background: var(--bg-0);
       border: none;
-      border-radius: 0;
-      padding: 16px 20px;
+      padding: 14px 18px;
       font-family: var(--font-mono);
-      font-size: 0.9rem;
-      line-height: 1.6;
+      font-size: 0.88rem;
+      line-height: 1.55;
       color: var(--ink-100);
       resize: none;
       outline: none;
     }
+    #cpEditor:focus { box-shadow: none; }
 
-    #pgsEditor:focus { box-shadow: none; }
-
-    /* Solution */
     .pgs-solution {
       background: var(--bg-2);
       border-top: 1px solid var(--line);
-      padding: 14px 20px;
+      padding: 12px 18px;
     }
-
     .pgs-solution-label {
       font-family: var(--font-mono);
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: var(--emerald-400);
       text-transform: uppercase;
       letter-spacing: 0.08em;
       font-weight: 600;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
-    /* Result */
     .pgs-result-panel {
       flex: 1;
       overflow: auto;
       background: var(--bg-1);
       border-top: 1px solid var(--line);
-      padding: 16px 20px;
+      padding: 14px 18px;
     }
 
     .pgs-result-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .pgs-result-status {
       font-family: var(--font-mono);
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 600;
     }
-
     .pgs-result-status.success { color: var(--emerald-400); }
     .pgs-result-status.error { color: var(--rose-400); }
 
-    .pgs-result-meta {
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
-      color: var(--ink-500);
-    }
+    .pgs-result-meta { font-family: var(--font-mono); font-size: 0.68rem; color: var(--ink-500); }
 
     .pgs-result-table {
       max-height: 100%;
@@ -364,26 +407,23 @@
       border-radius: 8px;
       border: 1px solid var(--line);
     }
-
     .pgs-result-table table {
       width: 100%;
       border-collapse: collapse;
       font-family: var(--font-mono);
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       background: var(--bg-0);
     }
-
     .pgs-result-table th, .pgs-result-table td {
-      padding: 6px 12px;
+      padding: 5px 12px;
       text-align: left;
       border-bottom: 1px solid var(--line);
       white-space: nowrap;
     }
-
     .pgs-result-table th {
       background: var(--bg-2);
       color: var(--cyan-400);
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       position: sticky;
@@ -391,56 +431,51 @@
     }
 
     .pgs-result-error {
-      padding: 12px 16px;
+      padding: 10px 14px;
       background: rgba(251, 113, 133, 0.08);
       border: 1px solid rgba(251, 113, 133, 0.25);
       border-radius: 8px;
       color: var(--rose-400);
       font-family: var(--font-mono);
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       white-space: pre-wrap;
     }
 
     .pgs-result-empty {
       text-align: center;
-      padding: 40px 20px;
+      padding: 36px 20px;
       color: var(--ink-400);
     }
-
     .pgs-result-empty-icon {
-      width: 48px;
-      height: 48px;
-      margin: 0 auto 12px;
+      width: 44px; height: 44px;
+      margin: 0 auto 10px;
       background: var(--bg-2);
       border-radius: 12px;
-      display: grid;
-      place-items: center;
+      display: grid; place-items: center;
       color: var(--cyan-400);
-      font-size: 1.2rem;
+      font-size: 1.1rem;
     }
 
     .pgs-result-running {
       color: var(--ink-300);
       font-family: var(--font-mono);
-      font-size: 0.85rem;
-      padding: 16px;
+      font-size: 0.82rem;
+      padding: 14px;
     }
 
     .pgs-banner {
-      margin-top: 14px;
-      padding: 12px 16px;
+      margin-top: 12px;
+      padding: 10px 14px;
       border-radius: 10px;
-      font-size: 0.875rem;
+      font-size: 0.85rem;
       font-weight: 500;
     }
-
     .pgs-banner-pass {
       background: rgba(52, 211, 153, 0.1);
       border: 1px solid rgba(52, 211, 153, 0.3);
       border-left: 4px solid var(--emerald-400);
       color: var(--emerald-400);
     }
-
     .pgs-banner-fail {
       background: rgba(251, 191, 36, 0.08);
       border: 1px solid rgba(251, 191, 36, 0.25);
@@ -448,26 +483,22 @@
       color: var(--amber-200, #fde68a);
     }
 
-    /* Action buttons */
     .pgs-btn-check {
       background: linear-gradient(135deg, var(--emerald-400), #16a34a);
       color: var(--bg-0);
       border: none;
       font-weight: 600;
     }
-
     .pgs-btn-check:hover {
       transform: translateY(-1px);
       box-shadow: 0 4px 12px -2px rgba(52,211,153,0.5);
       color: var(--bg-0);
     }
-
     .pgs-btn-run {
       background: linear-gradient(135deg, var(--cyan-500), var(--cyan-600));
       color: var(--bg-0);
       border: none;
     }
-
     .pgs-btn-run:hover {
       transform: translateY(-1px);
       color: var(--bg-0);
@@ -475,8 +506,7 @@
 
     .ex-loading {
       display: inline-block;
-      width: 12px;
-      height: 12px;
+      width: 12px; height: 12px;
       border: 2px solid var(--ink-500);
       border-top-color: var(--cyan-400);
       border-radius: 50%;
@@ -486,14 +516,18 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Mobile */
     @media (max-width: 1100px) {
-      .pgs-app { grid-template-columns: 220px 1fr; }
-      .pgs-editor-panel { display: none; }
+      .cp-app {
+        grid-template-columns: 200px 1fr;
+        grid-template-areas:
+          "sidebar topbar"
+          "sidebar question";
+      }
+      .cp-editor-panel { display: none; }
     }
     @media (max-width: 700px) {
-      .pgs-app { grid-template-columns: 1fr; }
-      .pgs-sidebar { display: none; }
+      .cp-app { grid-template-columns: 1fr; grid-template-areas: "topbar" "question"; }
+      .cp-sidebar { display: none; }
     }
   </style>
 </head>
@@ -508,8 +542,8 @@
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="mindmap.html">Learn</a></li>
-        <li><a href="practice.html" class="active">Practice</a></li>
-        <li><a href="company-practice.html">By Company</a></li>
+        <li><a href="practice.html">Practice</a></li>
+        <li><a href="company-practice.html" class="active">By Company</a></li>
         <li><a href="playground.html">Playground</a></li>
         <li><a href="interview.html">Interview</a></li>
         <li><a href="cheatsheet.html">Cheatsheet</a></li>
@@ -518,46 +552,58 @@
   </nav>
 
   <main>
-    <div class="pgs-app">
+    <div class="cp-app">
 
-      <!-- ============ LEFT SIDEBAR ============ -->
-      <aside class="pgs-sidebar">
-        <div class="pgs-sidebar-section">
-          <h3>🎯 Topics</h3>
-          <div id="pgsTopics"></div>
+      <!-- LEFT: Companies -->
+      <aside class="cp-sidebar">
+        <div class="cp-sidebar-section">
+          <h3>🏢 Companies</h3>
+          <div id="cpCompanies"></div>
         </div>
-        <div class="pgs-q-list">
+        <div class="cp-q-list">
           <h3 style="margin-bottom:8px;">📋 Questions</h3>
-          <div id="pgsQuestionList"></div>
+          <div id="cpQuestionList"></div>
         </div>
       </aside>
 
-      <!-- ============ QUESTION PANEL ============ -->
-      <section class="pgs-question" id="pgsQuestion"></section>
+      <!-- TOP: Filters -->
+      <div class="cp-topbar">
+        <div class="cp-filter-row">
+          <span class="cp-filter-label">TOPIC</span>
+          <div id="cpTopicFilters" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+        </div>
+        <div class="cp-filter-row">
+          <span class="cp-filter-label">LEVEL</span>
+          <div id="cpDifficultyFilters" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+        </div>
+      </div>
 
-      <!-- ============ EDITOR + RESULT PANEL ============ -->
-      <section class="pgs-editor-panel">
-        <div class="pgs-editor-toolbar">
-          <div class="pgs-editor-toolbar-left" id="pgsStatus">
+      <!-- QUESTION PANEL -->
+      <section class="cp-question" id="cpQuestion"></section>
+
+      <!-- EDITOR PANEL -->
+      <section class="cp-editor-panel">
+        <div class="cp-editor-toolbar">
+          <div class="cp-editor-toolbar-left" id="cpStatus">
             <span class="badge badge-amber"><span class="badge-dot"></span> LOADING</span>
-            <span>Starting SQLite engine…</span>
+            <span>Starting SQLite…</span>
           </div>
-          <div class="pgs-editor-toolbar-right">
-            <button class="btn btn-ghost btn-sm" id="pgsReset">↺ Reset</button>
-            <button class="btn btn-ghost btn-sm" id="pgsShowSolution">👁️ Show Solution</button>
-            <button class="btn btn-sm pgs-btn-run" id="pgsRun">▶ Run</button>
-            <button class="btn btn-sm pgs-btn-check" id="pgsCheck">✓ Check Solution</button>
+          <div class="cp-editor-toolbar-right">
+            <button class="btn btn-ghost btn-sm" id="cpReset">↺ Reset</button>
+            <button class="btn btn-ghost btn-sm" id="cpShowSolution">👁️ Show Solution</button>
+            <button class="btn btn-sm pgs-btn-run" id="cpRun">▶ Run</button>
+            <button class="btn btn-sm pgs-btn-check" id="cpCheck">✓ Check Solution</button>
           </div>
         </div>
 
-        <textarea id="pgsEditor" spellcheck="false" placeholder="-- Write your SQL here&#10;SELECT ..."></textarea>
+        <textarea id="cpEditor" spellcheck="false" placeholder="-- Write your SQL here&#10;SELECT ..."></textarea>
 
-        <div class="pgs-solution" id="pgsSolution" style="display:none;"></div>
+        <div class="pgs-solution" id="cpSolution" style="display:none;"></div>
 
-        <div class="pgs-result-panel" id="pgsResult">
+        <div class="pgs-result-panel" id="cpResult">
           <div class="pgs-result-empty">
             <div class="pgs-result-empty-icon">▶</div>
-            <p>Write your query and click <strong>Run</strong> to see results.</p>
+            <p>Write your query and click <strong>Run</strong> or <strong>Check Solution</strong>.</p>
           </div>
         </div>
       </section>
@@ -568,7 +614,8 @@
   <div class="toast-stack" id="toastStack"></div>
 
   <script src="assets/js/data/practice.js"></script>
+  <script src="assets/js/data/company-questions.js"></script>
   <script src="assets/js/app.js"></script>
-  <script src="assets/js/practice.js"></script>
+  <script src="assets/js/company-practice.js"></script>
 </body>
 </html>
