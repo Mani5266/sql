@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SQL Practice — 80 Real-World Questions · SQLSENSEI</title>
+  <meta name="description" content="StrataScratch-style SQL practice: read the question, write SQL in the editor, run + check. 80 real-world questions across 8 topics." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2306b6d4'/%3E%3Ctext x='50' y='66' text-anchor='middle' font-family='monospace' font-size='52' font-weight='700' fill='%23000'%3ES%3C/text%3E%3C/svg%3E" />
+  <style>
+    body { overflow: hidden; }
+    body::after { display: none; }
+
+    /* ===== Layout ===== */
+    .pgs-app {
+      display: grid;
+      grid-template-columns: 260px 1fr 1fr;
+      height: calc(100vh - 65px);
+      background: var(--bg-0);
+    }
+
+    /* ===== Left sidebar ===== */
+    .pgs-sidebar {
+      background: var(--bg-1);
+      border-right: 1px solid var(--line);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pgs-sidebar-section { padding: 16px; }
+    .pgs-sidebar h3 {
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-400);
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+
+    .pgs-topic {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 9px 12px;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      color: var(--ink-300);
+      cursor: pointer;
+      transition: all 0.2s var(--ease);
+      text-align: left;
+      margin-bottom: 3px;
+      font-family: var(--font-sans);
+    }
+
+    .pgs-topic:hover {
+      background: var(--bg-2);
+      color: var(--ink-100);
+    }
+
+    .pgs-topic.active {
+      background: rgba(34, 211, 238, 0.08);
+      border-color: rgba(34, 211, 238, 0.3);
+      color: var(--cyan-400);
+      font-weight: 600;
+    }
+
+    .pgs-topic-icon { font-size: 1rem; flex-shrink: 0; }
+    .pgs-topic-label { flex: 1; font-size: 0.8125rem; }
+    .pgs-topic-count {
+      background: var(--bg-3);
+      padding: 1px 7px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      color: var(--ink-400);
+    }
+
+    .pgs-topic.active .pgs-topic-count { background: var(--cyan-400); color: var(--bg-0); }
+
+    /* Question list */
+    .pgs-q-list {
+      border-top: 1px solid var(--line);
+      padding: 12px 16px;
+      flex: 1;
+    }
+
+    .pgs-q-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 8px 10px;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      color: var(--ink-300);
+      cursor: pointer;
+      transition: all 0.15s var(--ease);
+      text-align: left;
+      margin-bottom: 2px;
+      font-family: var(--font-sans);
+    }
+
+    .pgs-q-item:hover { background: var(--bg-2); color: var(--ink-100); }
+    .pgs-q-item.active {
+      background: var(--bg-3);
+      color: var(--ink-100);
+      border-color: var(--line-strong);
+    }
+
+    .pgs-q-num { font-family: var(--font-mono); font-size: 0.7rem; color: var(--ink-500); flex-shrink: 0; min-width: 22px; }
+    .pgs-q-title { flex: 1; font-size: 0.8125rem; line-height: 1.3; }
+    .pgs-q-diff {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 700;
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .pgs-q-diff.diff-easy { background: rgba(52,211,153,0.15); color: var(--emerald-400); }
+    .pgs-q-diff.diff-medium { background: rgba(251,191,36,0.15); color: var(--amber-400); }
+    .pgs-q-diff.diff-hard { background: rgba(251,113,133,0.15); color: var(--rose-400); }
+
+    /* ===== Question panel (middle) ===== */
+    .pgs-question {
+      overflow-y: auto;
+      background: var(--bg-0);
+      border-right: 1px solid var(--line);
+      padding: 24px 28px;
+    }
+
+    .pgs-q-breadcrumb {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--ink-400);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 14px;
+    }
+
+    .pgs-q-h {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--ink-100);
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 14px;
+    }
+
+    .pgs-q-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+
+    .pgs-tag {
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      background: var(--bg-2);
+      color: var(--ink-300);
+      border: 1px solid var(--line);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .pgs-tag-company {
+      background: rgba(34,211,238,0.08);
+      color: var(--cyan-400);
+      border-color: rgba(34,211,238,0.25);
+    }
+
+    .pgs-tag-diff.diff-easy { background: rgba(52,211,153,0.1); color: var(--emerald-400); border-color: rgba(52,211,153,0.3); }
+    .pgs-tag-diff.diff-medium { background: rgba(251,191,36,0.1); color: var(--amber-400); border-color: rgba(251,191,36,0.3); }
+    .pgs-tag-diff.diff-hard { background: rgba(251,113,133,0.1); color: var(--rose-400); border-color: rgba(251,113,133,0.3); }
+
+    .pgs-q-prompt {
+      background: var(--bg-1);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan-400);
+      padding: 16px 20px;
+      border-radius: 10px;
+      color: var(--ink-100);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .pgs-q-prompt code {
+      background: var(--bg-3);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 0.85em;
+      color: var(--amber-300);
+    }
+
+    .pgs-q-tables-label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--cyan-400);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .pgs-table-preview {
+      background: var(--bg-1);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 8px;
+    }
+
+    .pgs-table-preview summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--ink-200);
+      list-style: none;
+    }
+
+    .pgs-table-preview summary::-webkit-details-marker { display: none; }
+    .pgs-table-preview summary::before {
+      content: '▸';
+      color: var(--ink-500);
+      margin-right: 8px;
+      transition: transform 0.15s;
+      display: inline-block;
+    }
+
+    .pgs-table-preview[open] summary::before { transform: rotate(90deg); }
+
+    .pgs-table-name { color: var(--cyan-400); font-weight: 600; }
+    .pgs-table-meta { font-size: 0.7rem; color: var(--ink-500); }
+
+    .pgs-q-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    /* ===== Editor panel (right) ===== */
+    .pgs-editor-panel {
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-1);
+      overflow: hidden;
+    }
+
+    .pgs-editor-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 18px;
+      border-bottom: 1px solid var(--line);
+      background: var(--bg-0);
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pgs-editor-toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--ink-300);
+    }
+
+    .pgs-editor-toolbar-right { display: flex; gap: 6px; }
+
+    #pgsEditor {
+      flex: 1;
+      min-height: 200px;
+      max-height: 40%;
+      background: var(--bg-0);
+      border: none;
+      border-radius: 0;
+      padding: 16px 20px;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--ink-100);
+      resize: none;
+      outline: none;
+    }
+
+    #pgsEditor:focus { box-shadow: none; }
+
+    /* Solution */
+    .pgs-solution {
+      background: var(--bg-2);
+      border-top: 1px solid var(--line);
+      padding: 14px 20px;
+    }
+
+    .pgs-solution-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--emerald-400);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    /* Result */
+    .pgs-result-panel {
+      flex: 1;
+      overflow: auto;
+      background: var(--bg-1);
+      border-top: 1px solid var(--line);
+      padding: 16px 20px;
+    }
+
+    .pgs-result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .pgs-result-status {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .pgs-result-status.success { color: var(--emerald-400); }
+    .pgs-result-status.error { color: var(--rose-400); }
+
+    .pgs-result-meta {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--ink-500);
+    }
+
+    .pgs-result-table {
+      max-height: 100%;
+      overflow: auto;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+    }
+
+    .pgs-result-table table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      background: var(--bg-0);
+    }
+
+    .pgs-result-table th, .pgs-result-table td {
+      padding: 6px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+    }
+
+    .pgs-result-table th {
+      background: var(--bg-2);
+      color: var(--cyan-400);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      position: sticky;
+      top: 0;
+    }
+
+    .pgs-result-error {
+      padding: 12px 16px;
+      background: rgba(251, 113, 133, 0.08);
+      border: 1px solid rgba(251, 113, 133, 0.25);
+      border-radius: 8px;
+      color: var(--rose-400);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      white-space: pre-wrap;
+    }
+
+    .pgs-result-empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--ink-400);
+    }
+
+    .pgs-result-empty-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 12px;
+      background: var(--bg-2);
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      color: var(--cyan-400);
+      font-size: 1.2rem;
+    }
+
+    .pgs-result-running {
+      color: var(--ink-300);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      padding: 16px;
+    }
+
+    .pgs-banner {
+      margin-top: 14px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .pgs-banner-pass {
+      background: rgba(52, 211, 153, 0.1);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      border-left: 4px solid var(--emerald-400);
+      color: var(--emerald-400);
+    }
+
+    .pgs-banner-fail {
+      background: rgba(251, 191, 36, 0.08);
+      border: 1px solid rgba(251, 191, 36, 0.25);
+      border-left: 4px solid var(--amber-400);
+      color: var(--amber-200, #fde68a);
+    }
+
+    /* Action buttons */
+    .pgs-btn-check {
+      background: linear-gradient(135deg, var(--emerald-400), #16a34a);
+      color: var(--bg-0);
+      border: none;
+      font-weight: 600;
+    }
+
+    .pgs-btn-check:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px -2px rgba(52,211,153,0.5);
+      color: var(--bg-0);
+    }
+
+    .pgs-btn-run {
+      background: linear-gradient(135deg, var(--cyan-500), var(--cyan-600));
+      color: var(--bg-0);
+      border: none;
+    }
+
+    .pgs-btn-run:hover {
+      transform: translateY(-1px);
+      color: var(--bg-0);
+    }
+
+    .ex-loading {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid var(--ink-500);
+      border-top-color: var(--cyan-400);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Mobile */
+    @media (max-width: 1100px) {
+      .pgs-app { grid-template-columns: 220px 1fr; }
+      .pgs-editor-panel { display: none; }
+    }
+    @media (max-width: 700px) {
+      .pgs-app { grid-template-columns: 1fr; }
+      .pgs-sidebar { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-mark">SQ</span>
+        <span>SQL<span class="brand-suffix">SENSEI</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="mindmap.html">Learn</a></li>
+        <li><a href="practice.html" class="active">Practice</a></li>
+        <li><a href="playground.html">Playground</a></li>
+        <li><a href="interview.html">Interview</a></li>
+        <li><a href="patterns.html">Patterns</a></li>
+        <li><a href="cheatsheet.html">Cheatsheet</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="pgs-app">
+
+      <!-- ============ LEFT SIDEBAR ============ -->
+      <aside class="pgs-sidebar">
+        <div class="pgs-sidebar-section">
+          <h3>🎯 Topics</h3>
+          <div id="pgsTopics"></div>
+        </div>
+        <div class="pgs-q-list">
+          <h3 style="margin-bottom:8px;">📋 Questions</h3>
+          <div id="pgsQuestionList"></div>
+        </div>
+      </aside>
+
+      <!-- ============ QUESTION PANEL ============ -->
+      <section class="pgs-question" id="pgsQuestion"></section>
+
+      <!-- ============ EDITOR + RESULT PANEL ============ -->
+      <section class="pgs-editor-panel">
+        <div class="pgs-editor-toolbar">
+          <div class="pgs-editor-toolbar-left" id="pgsStatus">
+            <span class="badge badge-amber"><span class="badge-dot"></span> LOADING</span>
+            <span>Starting SQLite engine…</span>
+          </div>
+          <div class="pgs-editor-toolbar-right">
+            <button class="btn btn-ghost btn-sm" id="pgsReset">↺ Reset</button>
+            <button class="btn btn-ghost btn-sm" id="pgsShowSolution">👁️ Show Solution</button>
+            <button class="btn btn-sm pgs-btn-run" id="pgsRun">▶ Run</button>
+            <button class="btn btn-sm pgs-btn-check" id="pgsCheck">✓ Check Solution</button>
+          </div>
+        </div>
+
+        <textarea id="pgsEditor" spellcheck="false" placeholder="-- Write your SQL here&#10;SELECT ..."></textarea>
+
+        <div class="pgs-solution" id="pgsSolution" style="display:none;"></div>
+
+        <div class="pgs-result-panel" id="pgsResult">
+          <div class="pgs-result-empty">
+            <div class="pgs-result-empty-icon">▶</div>
+            <p>Write your query and click <strong>Run</strong> to see results.</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <div class="toast-stack" id="toastStack"></div>
+
+  <script src="assets/js/data/practice.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/practice.js"></script>
+</body>
+</html>
