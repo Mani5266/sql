@@ -33,8 +33,9 @@ window.LESSONS = {
     ],
     insight: 'A table is like a strict spreadsheet — every row in a column must match the declared type. That strictness is what makes SQL fast and reliable.',
     practice: [
-      { prompt: 'Look at the customers table. What is the primary key column?', solution: 'customer_id (INT) — it uniquely identifies each customer.' },
-      { prompt: 'How many columns does the customers table have? What are their data types?', solution: '6 columns: customer_id (INT), name (VARCHAR), email (VARCHAR), city (VARCHAR), signup_date (DATE), age (INT)' }
+      { prompt: 'Show all columns and all rows from the <code>customers</code> table to explore it.', solution: 'SELECT * FROM customers;' },
+      { prompt: 'Show all columns and all rows from the <code>products</code> table.', solution: 'SELECT * FROM products;' },
+      { prompt: 'Show all columns and all rows from the <code>employees</code> table — notice the <code>manager_id</code> column.', solution: 'SELECT * FROM employees;' }
     ],
     takeaways: [
       'Databases store data in <strong>tables</strong> made of <strong>rows</strong> and <strong>columns</strong>.',
@@ -484,7 +485,8 @@ window.LESSONS = {
     ],
     insight: 'Always know the row count BEFORE running a CROSS JOIN on production data. 1M-row × 1M-row CROSS JOIN = a trillion rows.',
     practice: [
-      { prompt: 'How many rows does CROSS JOIN of customers (8) × products (8) return?', solution: '64 rows. CROSS JOIN multiplies row counts.' }
+      { prompt: 'Combine customers and products using CROSS JOIN — show customer name and product name. Count the rows.', solution: 'SELECT c.name AS customer, p.name AS product FROM customers c CROSS JOIN products p;' },
+      { prompt: 'Use a smaller CROSS JOIN: pair each customer with the 2 cheapest products only.', solution: "SELECT c.name AS customer, p.name AS product FROM customers c CROSS JOIN (SELECT name FROM products ORDER BY price ASC LIMIT 2) p;" }
     ],
     takeaways: [
       '<code>FULL OUTER JOIN</code> = all rows from both sides, NULL where no match.',
@@ -742,7 +744,8 @@ window.LESSONS = {
     ],
     insight: 'Composite index <code>(a, b)</code> works for queries filtering on <code>a</code> alone, or <code>a AND b</code>, but NOT for <code>b</code> alone. Left-prefix rule.',
     practice: [
-      { prompt: 'You frequently query orders by customer_id and order_date. What index should you create?', solution: 'CREATE INDEX idx_orders_customer_date ON orders(customer_id, order_date); — a composite index serving both filters.' }
+      { prompt: 'Create an index on <code>orders.customer_id</code> called <code>idx_orders_customer</code>.', solution: 'CREATE INDEX idx_orders_customer ON orders(customer_id);' },
+      { prompt: 'Create a composite index on orders for both <code>customer_id</code> and <code>order_date</code>.', solution: 'CREATE INDEX idx_orders_customer_date ON orders(customer_id, order_date);' }
     ],
     takeaways: [
       'Indexes make reads fast and writes slower.',
@@ -771,7 +774,8 @@ window.LESSONS = {
     ],
     insight: 'Denormalization (e.g. star schemas) is often correct for analytics — trade write complexity for read speed. Normalize for OLTP, denormalize for OLAP.',
     practice: [
-      { prompt: 'A products table has (id, name, category_id, category_name, category_description). What normal form does it violate?', solution: '3NF. category_name and category_description depend on category_id, not on the product\'s primary key — a transitive dependency. Fix: extract a separate categories table.' }
+      { prompt: 'List all distinct product categories — these would become a separate <code>categories</code> table in a normalized schema.', solution: 'SELECT DISTINCT category FROM products;' },
+      { prompt: 'List all distinct departments from employees — same idea, these belong in their own table.', solution: 'SELECT DISTINCT department FROM employees;' }
     ],
     takeaways: [
       'Normalization removes redundancy: 1NF → 2NF → 3NF.',
@@ -801,7 +805,8 @@ window.LESSONS = {
     ],
     insight: 'Always wrap multi-statement state changes in a transaction. Many client errors don\'t auto-rollback.',
     practice: [
-      { prompt: 'Name the four ACID properties.', solution: 'Atomicity, Consistency, Isolation, Durability.' }
+      { prompt: 'Run a transaction: BEGIN, update product 101 to price 19.99, then ROLLBACK. Verify the price is unchanged.', solution: "BEGIN; UPDATE products SET price = 19.99 WHERE product_id = 101; ROLLBACK; SELECT product_id, name, price FROM products WHERE product_id = 101;" },
+      { prompt: 'Run a transaction that actually commits: BEGIN, increase the price of all Electronics by 10%, COMMIT. Verify.', solution: "BEGIN; UPDATE products SET price = price * 1.1 WHERE category = 'Electronics'; COMMIT; SELECT name, price FROM products WHERE category = 'Electronics';" }
     ],
     takeaways: [
       'Transactions: BEGIN → ... → COMMIT/ROLLBACK. All or nothing.',
@@ -827,7 +832,8 @@ window.LESSONS = {
     ],
     insight: 'PostgreSQL supports both. MySQL only supports plain views (until recently).',
     practice: [
-      { prompt: 'Create a view called <code>top_products</code> showing products with price > 50.', solution: 'CREATE VIEW top_products AS SELECT * FROM products WHERE price > 50;' }
+      { prompt: 'Create a view <code>top_products</code> showing products with price > 50, then query it.', solution: "CREATE VIEW top_products AS SELECT * FROM products WHERE price > 50; SELECT * FROM top_products;" },
+      { prompt: 'Create a view <code>customer_summary</code> with customer_id, order count, and total spent. Then query it.', solution: 'CREATE VIEW customer_summary AS SELECT customer_id, COUNT(*) AS orders, SUM(total_amount) AS total FROM orders GROUP BY customer_id; SELECT * FROM customer_summary ORDER BY total DESC;' }
     ],
     takeaways: [
       'Views = saved queries, recomputed on every read.',
@@ -856,7 +862,7 @@ window.LESSONS = {
     ],
     insight: 'Functions return values and can be used in queries: <code>SELECT my_fn(x)</code>. Procedures are called with <code>CALL</code> and perform multi-statement work.',
     practice: [
-      { prompt: 'Why might you prefer a stored procedure over equivalent application code?', solution: 'Fewer network round-trips, centralized data-access logic, atomic multi-statement work, centralized security.' }
+      { prompt: 'Run any query that would benefit from a stored function. For example: top 3 customers by lifetime value (delivered orders only).', solution: "SELECT c.name, SUM(o.total_amount) AS ltv FROM customers c JOIN orders o ON c.customer_id = o.customer_id WHERE o.status = 'delivered' GROUP BY c.name ORDER BY ltv DESC LIMIT 3;" }
     ],
     takeaways: [
       'Functions return values; procedures perform actions.',
@@ -896,7 +902,8 @@ window.LESSONS = {
     ],
     insight: 'A sequential scan on a 10M-row table for one specific customer = pain. <code>CREATE INDEX</code> turns it into a fast lookup.',
     practice: [
-      { prompt: 'EXPLAIN shows Seq Scan on orders filtering by customer_id on a 10M-row table. Most impactful fix?', solution: 'CREATE INDEX idx_orders_customer ON orders(customer_id); — turns the seq scan into a fast index lookup.' }
+      { prompt: 'See what SQLite\'s EXPLAIN output looks like for a simple SELECT.', solution: 'EXPLAIN QUERY PLAN SELECT * FROM orders WHERE customer_id = 1;' },
+      { prompt: 'Create an index on <code>customer_id</code>, then EXPLAIN the same query — note the difference.', solution: 'CREATE INDEX IF NOT EXISTS idx_orders_cust ON orders(customer_id); EXPLAIN QUERY PLAN SELECT * FROM orders WHERE customer_id = 1;' }
     ],
     takeaways: [
       '<code>EXPLAIN ANALYZE</code> shows the actual execution plan.',
@@ -934,7 +941,11 @@ window.LESSONS = {
     ],
     insight: 'Real-world SQL is rarely one clean SELECT. It\'s CTEs stitching together filtered subsets, with windows for rankings and CASE WHEN for business rules.',
     practice: [
-      { prompt: 'Write a query for the best-selling product per category by quantity.', solution: "WITH ranked AS (SELECT p.category, p.name, SUM(oi.quantity) AS qty, RANK() OVER (PARTITION BY p.category ORDER BY SUM(oi.quantity) DESC) AS rnk FROM products p JOIN order_items oi ON p.product_id = oi.product_id GROUP BY p.category, p.name) SELECT category, name, qty FROM ranked WHERE rnk = 1;" }
+      { prompt: 'Top 5 customers by lifetime value (delivered orders only).', solution: "SELECT c.name, c.city, SUM(o.total_amount) AS ltv FROM customers c JOIN orders o ON c.customer_id = o.customer_id WHERE o.status = 'delivered' GROUP BY c.name, c.city ORDER BY ltv DESC LIMIT 5;" },
+      { prompt: 'Best-selling product per category by total quantity.', solution: "WITH ranked AS (SELECT p.category, p.name, SUM(oi.quantity) AS qty, RANK() OVER (PARTITION BY p.category ORDER BY SUM(oi.quantity) DESC) AS rnk FROM products p JOIN order_items oi ON p.product_id = oi.product_id GROUP BY p.category, p.name) SELECT category, name, qty FROM ranked WHERE rnk = 1;" },
+      { prompt: 'Find products that have never been ordered.', solution: 'SELECT name FROM products p WHERE NOT EXISTS (SELECT 1 FROM order_items oi WHERE oi.product_id = p.product_id);' },
+      { prompt: 'Top 3 highest-paid employees per department.', solution: 'WITH ranked AS (SELECT name, department, salary, DENSE_RANK() OVER (PARTITION BY department ORDER BY salary DESC) AS rnk FROM employees) SELECT department, name, salary FROM ranked WHERE rnk <= 3 ORDER BY department, rnk;' },
+      { prompt: 'Running total of revenue over time (delivered orders).', solution: "SELECT order_date, total_amount, SUM(total_amount) OVER (ORDER BY order_date) AS running_total FROM orders WHERE status = 'delivered' ORDER BY order_date;" }
     ],
     takeaways: [
       'Real SQL combines every skill: CTEs, joins, aggregates, windows.',
